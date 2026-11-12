@@ -2,18 +2,24 @@ import Parse from "./parse.js";
 
 const ToDoItem = Parse.Object.extend("ToDoItem");
 const List = Parse.Object.extend("List");
-const ListMember = Parse.Object.extend("ListMember");
 
 // Converts a Parse object to a plain JS object.
 // Pointers need to fetch their related class before they can proceed.
 function toPlainObject(parseObject) {
-  const owner = parseObject.get("owner");
   const list = parseObject.get("list");
+  const assignee = parseObject.get("assignee");
+  const priority = parseObject.get("priority");
+  const difficulty = parseObject.get("difficulty");
   return {
     id: parseObject.id,
     taskName: parseObject.get("taskName"),
     done: parseObject.get("done"),
-    owner: owner ? owner.id : null,
+    doneDate: parseObject.get("doneDate"),
+    dueDate: parseObject.get("dueDate"),
+    priority: priority ? priority : "No priority",
+    difficulty: difficulty ? difficulty : "No difficulty",
+    assignee: assignee ? assignee : "Unassigned",
+    note: parseObject.get("note"),
     list: list ? list.id : null,
   };
 }
@@ -42,35 +48,6 @@ export async function fetchLists() {
 export async function fetchListById(listId) {
   const query = new Parse.Query(List);
   return await query.get(listId);
-}
-
-// Gives another existing user read and write access to a list and all its tasks
-// through ACL and creates a ListMember object to keep track of the sharing
-export async function shareList(list, username) {
-  const user = await new Parse.Query(Parse.User)
-    .equalTo("username", username)
-    .first();
-
-  if (!user) {
-    throw new Error("User not found");
-  }
-
-  const member = new ListMember();
-  member.set("list", list);
-  member.set("user", user);
-  const memberAcl = new Parse.ACL(Parse.User.current());
-  memberAcl.setReadAccess(user, true);
-  memberAcl.setWriteAccess(user, true);
-  member.setACL(memberAcl);
-
-  const acl = list.getACL();
-  acl.setReadAccess(user, true);
-  acl.setWriteAccess(user, true);
-  list.setACL(acl);
-  const todos = await new Parse.Query(ToDoItem).equalTo("list", list).find();
-  todos.forEach((todo) => todo.setACL(acl));
-
-  await Parse.Object.saveAll([member, list, ...todos]);
 }
 
 // Fetches all active (undone) tasks for the currently logged in user
