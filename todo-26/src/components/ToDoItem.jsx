@@ -18,7 +18,7 @@ export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
         <span className="material-symbols-outlined">delete</span>
       </button>
       
-      {/* Show warning popout when delete button is clicked */}
+      {/* Show warning popup when delete button is clicked */}
       {showWarning && (
         <WarningPopup
           message={`Are you sure you want to delete "${ToDoElem.taskName}"?`}

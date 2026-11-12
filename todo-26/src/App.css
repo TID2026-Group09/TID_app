@@ -31,6 +31,12 @@ button {
     border: none;
 }
 
+button:disabled {
+  background: #d1d5db;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
 a {
     color: #fdfdfd;
     text-decoration: none;
@@ -40,6 +46,7 @@ a:hover {
     text-decoration: underline;
 }
 
+/***** LOGIN SCREEN ******/
 .login-screen {
     color: #fdfdfd;
     box-sizing: border-box;
@@ -56,6 +63,7 @@ a:hover {
     gap: 1rem;
 }
 
+/***** TODOS ******/
 .todo-item {
     display: flex;
     gap: 0.5rem;
@@ -113,7 +121,7 @@ a:hover {
   padding: 1rem;
 }
 
-.popout {
+.popup {
   background: #fff;
   color: #1a1a1a;
   width: 100%;
@@ -184,6 +192,19 @@ a:hover {
 
 .popup-actions .popup-cancel:hover {
   background: #004C4C;
+}
+
+/***** SHARING ******/
+.shared-with {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-icon {
+  display: flex;
+  gap: 12px;
 }
 
 /***** FOR WEB ******/

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export default function WarningPopout({ message, onConfirm, onClose }) {
+export default function WarningPopup({ message, onConfirm, onClose }) {
   // Close on Escape
   useEffect(() => {
     const handleKey = (e) => {
@@ -10,7 +10,7 @@ export default function WarningPopout({ message, onConfirm, onClose }) {
     return () => window.removeEventListener("keydown", handleKey);
   }, [onClose]);
 
-  // Confirm the action and close the popout
+  // Confirm the action and close the popup
   const handleConfirm = () => {
     onConfirm();
     onClose();
@@ -19,13 +19,13 @@ export default function WarningPopout({ message, onConfirm, onClose }) {
   return (
     <div className="popup-overlay" onClick={onClose}>
       <div
-        className="popout"
+        className="popup"
         role="alertdialog"
         // Accessibility attributes for screen readers
         aria-modal="true"
         aria-labelledby="warning-title"
         aria-describedby="warning-message"
-        // Stop popup from closing when clicking inside the popout
+        // Stop popup from closing when clicking inside the popup
         onClick={(e) => e.stopPropagation()}
       >
         <div className="popup-header">

@@ -27,6 +27,7 @@ function App() {
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <div className="main-inner">
         <button onClick={handleLogOut}>Logout</button>
+        <p style={{ color: "white" }}>Logged in as: {user.get("username")}</p>
         <Routes>
           <Route path="/" element={<ListOverview />} />
           <Route path="/lists/:listId" element={<ListPage />} />
