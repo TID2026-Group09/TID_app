@@ -101,6 +101,92 @@ a:hover {
     border: none;
 }
 
+/***** POPUP (WARNING AND SHARING) ******/
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.popout {
+  background: #fff;
+  color: #1a1a1a;
+  width: 100%;
+  max-width: 24rem;
+  border-radius: 8px;
+  padding: 1.25rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.popup-title {
+  margin: 0;
+  font-weight: 600;
+  color: #004C4C;
+}
+
+.popup-close {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #555;
+  padding: 0.25rem;
+}
+
+.popup-close:hover {
+  color: #000;
+}
+
+.popup-message {
+  margin: 1rem 0 1.5rem;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.popup-actions button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+
+.popup-actions .popup-confirm {
+  background: #b42318;
+  border-color: #b42318;
+}
+
+.popup-actions .popup-cancel {
+  background: #006666;
+}
+
+.popup-actions .popup-confirm:hover {
+  background: #912018;
+}
+
+.popup-actions .popup-cancel:hover {
+  background: #004C4C;
+}
+
+/***** FOR WEB ******/
 @media (min-width: 560px) {
     h1 {
         font-size: 2rem;

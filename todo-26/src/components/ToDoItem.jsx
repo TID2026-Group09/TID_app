@@ -1,4 +1,9 @@
+import { useState } from "react";
+import WarningPopup from "./WarningPopup";
+
 export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
+  const [showWarning, setShowWarning] = useState(false);
+  
   return (
     <li className="todo-item">
       <input
@@ -9,9 +14,18 @@ export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
       <span className={ToDoElem.done ? "done" : ""} key={ToDoElem.id}>
         {ToDoElem.taskName}
       </span>
-      <button className="delete-button" onClick={() => onRemove(ToDoElem.id)}>
+      <button className="delete-button" onClick={() => setShowWarning(true)}>
         <span className="material-symbols-outlined">delete</span>
       </button>
+      
+      {/* Show warning popout when delete button is clicked */}
+      {showWarning && (
+        <WarningPopup
+          message={`Are you sure you want to delete "${ToDoElem.taskName}"?`}
+          onConfirm={() => onRemove(ToDoElem.id)}
+          onClose={() => setShowWarning(false)}
+        />
+      )}
     </li>
   );
 }
