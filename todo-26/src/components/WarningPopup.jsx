@@ -1,3 +1,4 @@
+import { Typography, IconButton, Button } from "@mui/material";
 import { useEffect } from "react";
 
 export default function WarningPopup({ message, onConfirm, onClose }) {
@@ -25,33 +26,35 @@ export default function WarningPopup({ message, onConfirm, onClose }) {
         aria-modal="true"
         aria-labelledby="warning-title"
         aria-describedby="warning-message"
-        // Stop popup from closing when clicking inside the popup
+        // Prevent clicks inside the popup from closing it
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="popup-header">
-          <p className="popup-title">
-            This action cannot be undone!
-          </p>
-          <button
-            className="popup-close"
-            onClick={onClose}
-            aria-label="Close"
-          >
-            ✕
-          </button>
-        </div>
+        <IconButton
+          onClick={onClose}
+          aria-label="Close popup"
+          className="close-popup-button"
+        >
+          <span className="material-symbols-outlined">close</span>
+        </IconButton>
 
-        <p className="popup-message">
-          {message}
-        </p>
+        <Typography variant="h2" id="warning-title">
+          This Action Cannot Be Undone!
+        </Typography>
 
-        <div className="popup-actions">
-          <button className="popup-cancel" onClick={onClose}>
-            Cancel
-          </button>
-          <button className="popup-confirm" onClick={handleConfirm}>
-            Confirm
-          </button>
+        <div className="layout-column">
+          <div className="popup-message" id="warning-message">
+            {message}
+          </div>
+
+          <div className="layout-row layout-equal-children">
+            <Button variant="contained" onClick={onClose}>
+              Cancel
+            </Button>
+
+            <Button variant="soft" color="danger" onClick={handleConfirm}>
+              Confirm
+            </Button>
+          </div>
         </div>
       </div>
     </div>

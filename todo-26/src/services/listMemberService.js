@@ -11,10 +11,10 @@ export async function shareList(list, username) {
     .first();
 
   if (!user) {
-    throw new Error("User not found");
+    throw new Error("User not found.");
   }
 
- // Update the list's ACL first, so everything below can reuse it
+  // Update the list's ACL first, so everything below can reuse it
   const acl = list.getACL();
   acl.setReadAccess(user, true);
   acl.setWriteAccess(user, true);
@@ -27,11 +27,11 @@ export async function shareList(list, username) {
   existingMembers.forEach((m) => m.setACL(acl));
 
   if (existingMembers.filter((m) => m.get("user").id === user.id).length > 0) {
-    throw new Error("User already has access to this list");
+    throw new Error("User already has access to this list.");
   }
 
   if (list.get("owner").id === user.id) {
-    throw new Error("The owner already has access to this list");
+    throw new Error("The owner already has access to this list.");
   }
 
   // New member row: visible to the owner, existing members and the new user
@@ -54,7 +54,7 @@ export async function removeUserFromList(list, memberId) {
     .get(memberId);
 
   if (member.get("list").id !== list.id) {
-    throw new Error("Member does not belong to this list");
+    throw new Error("Member does not belong to this list.");
   }
 
   // Remove the user's access to the list and all its tasks
@@ -93,7 +93,7 @@ export async function leaveList(list) {
     .first();
 
   if (!member) {
-    throw new Error("You are not a member of this list");
+    throw new Error("You are not a member of this list.");
   }
 
   await removeUserFromList(list, member.id);
