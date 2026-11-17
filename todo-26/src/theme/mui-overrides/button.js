@@ -8,7 +8,7 @@ export const buttonTheme = {
       root: ({ theme }) => ({
         minWidth: "max-content",
         height: 40,
-        padding: `${theme.spacing(2)} ${theme.spacing(4)}`, // 8px 16px
+        padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
       }),
 
       sizeSmall: ({ theme }) => ({
@@ -52,6 +52,11 @@ export const buttonTheme = {
           border: `${borders.width.default}px solid ${theme.palette.danger.main}`,
           "&:hover": {
             backgroundColor: theme.palette.danger.hoverSoft,
+          },
+          "&.Mui-disabled": {
+            color: theme.palette.action.disabled,
+            backgroundColor: theme.palette.background.paper,
+            borderColor: theme.palette.action.disabled,
           },
         }),
       },
