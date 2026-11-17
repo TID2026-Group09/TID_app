@@ -77,7 +77,7 @@ export default function ToDoList({ list }) {
 
       <div className="layout-row layout-equal-children">
         <Button
-          variant="outlined"
+          variant="soft"
           color="danger"
           onClick={() => setLeavePopup(true)}
           disabled={
@@ -91,7 +91,11 @@ export default function ToDoList({ list }) {
         <Button
           variant="soft"
           color="danger"
-          // TODO: Add delete list functionality
+          // TODO: Implement delete list functionality
+          disabled={
+            list.get("owner").get("username") !==
+            getCurrentUser().get("username")
+          }
         >
           Delete List
         </Button>
