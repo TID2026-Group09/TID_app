@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Typography, Button, IconButton } from "@mui/material";
 import TextForm from "./TextForm.jsx";
 import ToDoItem from "./ToDoItem.jsx";
 import SharingComponent from "./ShareComponent.jsx";
@@ -61,37 +62,78 @@ export default function ToDoList({ list }) {
   }
 
   return (
-    <div className="todo-list" style={{ backgroundColor: "#e9edc9" }}>
-      <h1>{list.get("listName")}</h1>
-      <button onClick={() => setShowSharing(true)}>Share</button>
-      <button
-        onClick={() => setLeavePopup(true)}
-        disabled={
-          list.get("owner").get("username") === getCurrentUser().get("username")
-        }
-      >
-        Leave list
-      </button>
-      <TextForm
-        onButtonClick={handleAdd}
-        buttonText="Add"
-        placeholder="Add a task"
-      />
-      {toDoList.length === 0 ? (
-        <p>No tasks yet. Enjoy your day!</p>
-      ) : (
-        <ul>
-          {toDoList.map((elem) => (
-            <ToDoItem
-              key={elem.id}
-              ToDoElem={elem}
-              onToggle={handleToggle}
-              onRemove={handleRemove}
-            />
-          ))}
-        </ul>
-      )}
-      
+    <div className="layout-column">
+      <div className="layout-row layout-between">
+        <Typography variant="h1">{list.get("listName")}</Typography>
+
+        <IconButton
+          onClick={() => setShowSharing(true)}
+          aria-label="Share list"
+          sx={{ mt: -4 }}
+        >
+          <span className="material-symbols-outlined large">group</span>
+        </IconButton>
+      </div>
+
+      <div className="layout-row layout-equal-children">
+        <Button
+          variant="soft"
+          color="danger"
+          onClick={() => setLeavePopup(true)}
+          disabled={
+            list.get("owner").get("username") ===
+            getCurrentUser().get("username")
+          }
+        >
+          Leave List
+        </Button>
+
+        <Button
+          variant="soft"
+          color="danger"
+          // TODO: Implement delete list functionality
+          disabled={
+            list.get("owner").get("username") !==
+            getCurrentUser().get("username")
+          }
+        >
+          Delete List
+        </Button>
+      </div>
+
+      <div className="surface">
+        <Typography variant="h2">Add New Task</Typography>
+        <TextForm
+          onButtonClick={handleAdd}
+          buttonText="Add"
+          label={"Task Name"}
+          placeholder="Enter a task name..."
+        />
+      </div>
+
+      <div className="surface">
+        <Typography variant="h2">Tasks to Do</Typography>
+        {toDoList.length === 0 ? (
+          <Typography>No tasks yet. Enjoy your day!</Typography>
+        ) : (
+          <ul className="layout-column">
+            {toDoList.map((elem) => (
+              <ToDoItem
+                key={elem.id}
+                ToDoElem={elem}
+                onToggle={handleToggle}
+                onRemove={handleRemove}
+              />
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div className="surface" style={{ opacity: 0.5 }}>
+        <Typography variant="h2">Completed Tasks</Typography>
+        {/* TODO: Add functionality for displaying completed tasks */}
+      </div>
+
       {/* Show sharing component when share button is clicked */}
       {showSharing && (
         <SharingComponent
@@ -104,7 +146,30 @@ export default function ToDoList({ list }) {
       {/* Show leave list warning popup when leave button is clicked */}
       {leavePopup && (
         <WarningPopup
-          message={`Are you sure you want to leave the ${list.get("listName")} list?\n\nYou have ${toDoList.filter((todo) => todo.assignee === getCurrentUser().get("username")).length} unfinished task(s) which will become unassigned.`}
+          message={
+            <div className="layout-column">
+              <Typography>
+                Are you sure you want to{" "}
+                <strong className="text-emphasized">
+                  leave the "{list.get("listName")}" list
+                </strong>
+                ?
+              </Typography>
+              <Typography>
+                You have{" "}
+                <strong className="text-emphasized">
+                  {
+                    toDoList.filter(
+                      (todo) =>
+                        todo.assignee === getCurrentUser().get("username"),
+                    ).length
+                  }{" "}
+                  unfinished task(s){" "}
+                </strong>
+                which will become unassigned.
+              </Typography>
+            </div>
+          }
           onConfirm={handleLeaveList}
           onClose={() => setLeavePopup(false)}
         />

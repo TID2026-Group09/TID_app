@@ -3,7 +3,12 @@
 //   getListMembers,
 //   removeUserFromList,
 // } from "../services/toDoService.js";
-import {shareList, getListMembers, removeUserFromList} from "../services/listMemberService.js";
+import { Typography, Button, IconButton } from "@mui/material";
+import {
+  shareList,
+  getListMembers,
+  removeUserFromList,
+} from "../services/listMemberService.js";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserIcon from "./UserIcon.jsx";
@@ -67,7 +72,7 @@ export default function ShareComponent({
     onRemoveAccess();
   }
 
-  // Number of assinged tasks for the member that is about to be removed (for the warning message)
+  // Number of assigned tasks for the member that is about to be removed (for the warning message)
   const unfinishedCount = memberToRemove
     ? todos.filter((todo) => todo.assignee === memberToRemove.username).length
     : 0;
@@ -78,54 +83,92 @@ export default function ShareComponent({
         <div
           className="popup"
           role="alertdialog"
+          // Accessibility attributes for screen readers
           aria-modal="true"
           aria-labelledby="popup-title"
           aria-describedby="popup-message"
+          // Prevent clicks inside the popup from closing it
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="popup-header">
-            <h2 className="popup-title">Share list</h2>
-            <button
-              className="popup-close"
-              onClick={onClose}
-              aria-label="Close"
-            >
-              ✕
-            </button>
-          </div>
-          <TextForm
-            onButtonClick={handleShare}
-            buttonText="Share list"
-            placeholder="Username to share with"
-          />
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          <p>Owner</p>
-          <UserIcon user={{ username: list.get("owner").get("username") }} />
-          <p>Currently shared with</p>
-          {members.length === 0 ? (
-            <p>The list hasn't been shared with anyone yet.</p>
-          ) : (
-            <ul className="shared-list">
-              {members.map((member) => (
-                <li className="shared-with" key={member.memberId}>
-                  <UserIcon user={member} />
-                  <button
-                    onClick={() => setMemberToRemove(member)}
-                    aria-label={`Unshare list with ${member.username}`}
+          <IconButton
+            onClick={onClose}
+            aria-label="Close popup"
+            className="close-popup-button"
+          >
+            <span className="material-symbols-outlined">close</span>
+          </IconButton>
+
+          <Typography variant="h2" id="popup-title">
+            List Sharing
+          </Typography>
+
+          <div className="layout-column">
+            <Typography id="popup-message">
+              Manage who has access to this list and share it with other users.
+            </Typography>
+
+            <TextForm
+              onButtonClick={handleShare}
+              buttonText="Share"
+              label={"Username"}
+              placeholder="Enter a username..."
+            />
+            {error && <Typography color="danger">{error}</Typography>}
+            <Typography>Owner:</Typography>
+            <UserIcon user={{ username: list.get("owner").get("username") }} />
+            <Typography>Currently shared with:</Typography>
+            {members.length === 0 ? (
+              <Typography>
+                The list has not been shared with anyone yet.
+              </Typography>
+            ) : (
+              <ul className="layout-column">
+                {members.map((member) => (
+                  <li
+                    className="layout-row layout-between"
+                    key={member.memberId}
                   >
-                    Remove
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
+                    <UserIcon user={member} />
+                    <Button
+                      variant="outlined"
+                      color="danger"
+                      size="small"
+                      onClick={() => setMemberToRemove(member)}
+                      aria-label={`Unshare list with ${member.username}`}
+                    >
+                      Unshare
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
 
       {/* One warning popup, for the member that was clicked */}
       {memberToRemove && (
         <WarningPopup
-          message={`Are you sure you want to remove ${memberToRemove.username}'s access to the ${list.get("listName")} list?\n\nThey have ${unfinishedCount} unfinished task(s) which will become unassigned.`}
+          message={
+            <div className="layout-column">
+              <Typography>
+                Are you sure you want to{" "}
+                <strong className="text-emphasized">
+                  {" "}
+                  remove {memberToRemove.username}'s access to the "
+                  {list.get("listName")}" list
+                </strong>
+                ?
+              </Typography>
+              <Typography>
+                They have{" "}
+                <strong className="text-emphasized">
+                  {unfinishedCount} unfinished task(s)
+                </strong>{" "}
+                which will become unassigned.
+              </Typography>
+            </div>
+          }
           onConfirm={async () => {
             await handleUnshare(memberToRemove);
             setMemberToRemove(null);
