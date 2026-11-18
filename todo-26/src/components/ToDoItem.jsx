@@ -1,10 +1,17 @@
 import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import WarningPopup from "./WarningPopup";
 import { Typography, IconButton } from "@mui/material";
 
 export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
   const [showWarning, setShowWarning] = useState(false);
+  const navigate = useNavigate();
+  const { listId } = useParams();
 
+  function openDetails() {
+    navigate(`/lists/${listId}/${ToDoElem.id}`);
+  }
+  
   return (
     <li className="layout-row">
       <IconButton
@@ -19,7 +26,19 @@ export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
         </span>
       </IconButton>
 
-      <span className={ToDoElem.done ? "done" : ""} key={ToDoElem.id}>
+      <span
+        className={ToDoElem.done ? "done" : ""}
+        role="button"
+        tabIndex={0}
+        onClick={openDetails}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openDetails();
+          }
+        }}
+        aria-label={`Edit task: ${ToDoElem.taskName}`}
+      >
         {ToDoElem.taskName}
       </span>
 

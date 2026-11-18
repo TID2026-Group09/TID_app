@@ -3,6 +3,7 @@ import AuthPage from "./pages/AuthPage.jsx";
 import ListPage from "./pages/ListPage.jsx";
 import { getCurrentUser, logOut } from "./services/authService.js";
 import ListOverview from "./components/ListOverview.jsx";
+import TaskDetailsPage from "./pages/TaskDetailsPage.jsx";
 import { useState } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Typography from "@mui/material/Typography";
@@ -38,6 +39,7 @@ function App() {
       <Routes>
         <Route path="/" element={<ListOverview />} />
         <Route path="/lists/:listId" element={<ListPage />} />
+        <Route path="/lists/:listId/:todoId" element={<TaskDetailsPage />} />
         <Route path="*" element={<Link to="/">No such page exists.</Link>} />
       </Routes>
     </BrowserRouter>

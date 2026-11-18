@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Typography, Button, IconButton } from "@mui/material";
-import TextForm from "./TextForm.jsx";
+import AddToDoForm from "./AddToDoForm.jsx";
 import ToDoItem from "./ToDoItem.jsx";
 import SharingComponent from "./ShareComponent.jsx";
 import {
@@ -103,11 +103,9 @@ export default function ToDoList({ list }) {
 
       <div className="surface">
         <Typography variant="h2">Add New Task</Typography>
-        <TextForm
-          onButtonClick={handleAdd}
-          buttonText="Add"
+        <AddToDoForm
+          onAdd={handleAdd}
           label={"Task Name"}
-          placeholder="Enter a task name..."
         />
       </div>
 
