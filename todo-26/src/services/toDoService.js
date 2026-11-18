@@ -16,12 +16,23 @@ function toPlainObject(parseObject) {
     done: parseObject.get("done"),
     doneDate: parseObject.get("doneDate"),
     dueDate: parseObject.get("dueDate"),
+    dueTime: parseObject.get("dueTime"),
     priority: priority ? priority : "No priority",
     difficulty: difficulty ? difficulty : "No difficulty",
     assignee: assignee ? assignee : "Unassigned",
     note: parseObject.get("note"),
     list: list ? list.id : null,
   };
+}
+
+// Converts a date and time string to a JS Date object. If no time is provided, it defaults to 23:59 (end of day).
+function convertToDateObject(date, time) {
+  return new Date(`${date}T${time || "23:59"}`);
+}
+
+// For when the whole list isn't needed
+export function createDummyListWithId(listId) {
+  return List.createWithoutData(listId);
 }
 
 // Creates a new list for the current user
@@ -41,13 +52,21 @@ export async function createList(title) {
 // Fetch all lists for the current user (based on ACL)
 export async function fetchLists() {
   const query = new Parse.Query(List);
+  query.include("owner");
   return await query.find();
 }
 
 // Fetch a specific list for the current user (the user must have ACL)
 export async function fetchListById(listId) {
   const query = new Parse.Query(List);
+  query.include("owner");
   return await query.get(listId);
+}
+
+// Fetch a specific task
+export async function fetchToDoById(todoId) {
+  const query = new Parse.Query(ToDoItem);
+  return toPlainObject(await query.get(todoId));
 }
 
 // Fetches all active (undone) tasks for the currently logged in user
@@ -61,16 +80,69 @@ export async function fetchToDos(list) {
   return results.map(toPlainObject);
 }
 
+// Checks if a state of a task/item is empty and unsets it 
+function setOrUnset(item, field, value) {
+  if (value === undefined || value == null || value === "") {
+    item.unset(field);
+  } else {
+    item.set(field, value);
+  }
+}
+
+// 
+function applyDetails(item, details = {}) {
+  const { taskName, dueDate, dueTime, priority, difficulty, assignee, note } = details;
+
+  if (taskName !== undefined) {
+    item.set("taskName", taskName.trim());
+  }
+
+  // Due date and time (a time without a date is not allowed)
+  if (dueDate !== undefined) {
+    setOrUnset(item, "dueDate", dueDate);
+    if (!dueDate) item.unset("dueTime");
+  }
+  if (dueTime !== undefined && dueDate !== "") {
+    setOrUnset(item, "dueTime", dueTime);
+  }
+
+  // "No priority and "No diffifucty" is stored as the default options
+  if (priority !== undefined) {
+    item.set("priority", priority || "No priority");
+  }
+  if (difficulty !== undefined) {
+    item.set("difficulty", difficulty || "No difficulty");
+  }
+
+  // Unassinged = no value in the database in case of username "Unassigned"
+  if (assignee !== undefined) {
+    setOrUnset(item, "assignee", assignee === "Unassigned" ? "" : assignee);
+  }
+
+  setOrUnset(item, "note", note);
+}
+
 // Creates a new task for the current user
-export async function createToDo(taskName, list) {
+export async function createToDo(taskName, list, details = {}) {
   const item = new ToDoItem();
 
   item.set("taskName", taskName);
   item.set("done", false);
   item.set("list", list);
+  item.set("priority", "No priority");
+  item.set("difficulty", "No difficulty");
+
+  applyDetails(item, {...details, taskName})
 
   const acl = list.getACL();
   item.setACL(acl);
+  return toPlainObject(await item.save());
+}
+
+// Update the details of an existing to-do
+export async function updateToDo(id, details) {
+  const item = ToDoItem.createWithoutData(id);
+  applyDetails(item, details);
   return toPlainObject(await item.save());
 }
 

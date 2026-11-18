@@ -64,6 +64,10 @@ a:hover {
 }
 
 /***** TODOS ******/
+.light-header {
+    color: #fdfdfd;
+}
+
 .todo-item {
     display: flex;
     gap: 0.5rem;

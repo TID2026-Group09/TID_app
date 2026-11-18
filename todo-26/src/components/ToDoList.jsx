@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import TextForm from "./TextForm.jsx";
+import AddToDoForm from "./AddToDoForm.jsx";
 import ToDoItem from "./ToDoItem.jsx";
 import SharingComponent from "./ShareComponent.jsx";
 import {
@@ -72,10 +72,8 @@ export default function ToDoList({ list }) {
       >
         Leave list
       </button>
-      <TextForm
-        onButtonClick={handleAdd}
-        buttonText="Add"
-        placeholder="Add a task"
+      <AddToDoForm
+        onAdd={handleAdd}
       />
       {toDoList.length === 0 ? (
         <p>No tasks yet. Enjoy your day!</p>
