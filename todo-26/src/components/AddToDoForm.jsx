@@ -29,7 +29,7 @@ export default function AddToDoForm({ onAdd }) {
         <TextField
           size="small"
           label={"Task Name"}
-          placeholder={"Add a task"}
+          placeholder={"Enter a task name..."}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
         />

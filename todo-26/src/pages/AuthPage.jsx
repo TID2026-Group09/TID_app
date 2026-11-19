@@ -55,15 +55,10 @@ export default function AuthPage({ onAuthenticated }) {
           />
 
           <div className="layout-row layout-equal-children">
-            <Button type="submit" variant="contained" color="primary">
+            <Button type="submit" variant="contained">
               Log In
             </Button>
-            <Button
-              type="button"
-              variant="contained"
-              color="primary"
-              onClick={handleSignUp}
-            >
+            <Button type="button" variant="contained" onClick={handleSignUp}>
               Sign Up
             </Button>
           </div>

@@ -29,7 +29,6 @@ export default function TextForm({
       <Button
         type="submit"
         variant="contained"
-        color="primary"
         disabled={inputValue.trim().length === 0}
       >
         {buttonText}
