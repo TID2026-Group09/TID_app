@@ -25,30 +25,32 @@ export default function AddToDoForm({ onAdd }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <TextField
-        size="small"
-        label={"Task Name"}
-        placeholder={"Add a task"}
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-      />
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        disabled={inputValue.trim().length === 0}
-      >
-        {"Quick Add"}
-      </Button>
-      <Button
-        type="button"
-        onClick={onDetailedAdd}
-        variant="outlined"
-        color="primary"
-        disabled={inputValue.trim().length === 0}
-      >
-        {"Detailed Add"}
-      </Button>
+      <div className="layout-column">
+        <TextField
+          size="small"
+          label={"Task Name"}
+          placeholder={"Add a task"}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+        />
+        <div className="layout-row layout-equal-children">
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={inputValue.trim().length === 0}
+          >
+            {"Quick Add"}
+          </Button>
+          <Button
+            type="button"
+            onClick={onDetailedAdd}
+            variant="outlined"
+            disabled={inputValue.trim().length === 0}
+          >
+            {"Detailed Add"}
+          </Button>
+        </div>
+      </div>
     </form>
   );
 }
