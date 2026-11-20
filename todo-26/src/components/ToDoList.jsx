@@ -10,7 +10,7 @@ import {
   setToDoDone,
   deleteToDo,
 } from "../services/toDoService.js";
-import { sortDoneDateDescending } from "../services/sortingService.js";
+import { prioritizeTasks, sortDoneDateDescending } from "../services/sortingService.js";
 import { leaveList } from "../services/listMemberService.js";
 import { getCurrentUser } from "../services/authService.js";
 import WarningPopup from "./WarningPopup.jsx";
@@ -24,6 +24,8 @@ export default function ToDoList({ list }) {
   const completedToDos = sortDoneDateDescending(
     toDoList.filter((elem) => elem.done),
   );
+
+  const prioritizedTasks = [...toDoList].sort(prioritizeTasks);
 
   // Will run when the component is mounted because of []
   useEffect(() => {
@@ -113,11 +115,11 @@ export default function ToDoList({ list }) {
 
       <div className="surface">
         <Typography variant="h2">Tasks to Do</Typography>
-        {toDoList.filter((elem) => elem.done === false).length === 0 ? (
+        {prioritizedTasks.filter((elem) => elem.done === false).length === 0 ? (
           <Typography>No tasks yet. Enjoy your day!</Typography>
         ) : (
           <ul className="layout-column">
-            {toDoList
+            {prioritizedTasks
               .filter((elem) => elem.done === false)
               .map((elem) => (
                 <ToDoItem
