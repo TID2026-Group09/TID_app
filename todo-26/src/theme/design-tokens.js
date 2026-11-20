@@ -18,8 +18,8 @@ export const borders = {
 const text = {
   primary: "#202B29",
   secondary: "#004C4C",
-  placeholder: "#636B69",
-  disabled: "#A6AAA9",
+  placeholder: "#757575",
+  disabled: "#757575",
 };
 
 const primary = {
@@ -57,7 +57,8 @@ export const palette = {
   },
 
   action: {
-    disabled: text.disabled,
+    disabledDark: text.disabled,
+    disabledLight: "#FFFFFF",
   },
 
   input: {
