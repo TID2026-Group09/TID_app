@@ -9,9 +9,21 @@ import {
 } from "../services/toDoService.js";
 import { getListMembers } from "../services/listMemberService.js";
 import WarningPopup from "../components/WarningPopup.jsx";
-// import dayjs from "dayjs";
-// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-// import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import {
+  TextField,
+  Typography,
+  Button,
+  Select,
+  MenuItem,
+  Chip,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
+import dayjs from "dayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 export default function TaskDetailsPage() {
   const navigate = useNavigate();
@@ -75,18 +87,22 @@ export default function TaskDetailsPage() {
     };
   }, [listId, todoId]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Typography>Loading...</Typography>;
   if (loadError)
-    return <Link to={`/lists/${listId}`}>{loadError} Back to list</Link>;
+    return (
+      <Link className="text-link" to={`/lists/${listId}`}>
+        {loadError}← Back to list
+      </Link>
+    );
 
   async function handleSave(e) {
     e.preventDefault();
     if (taskName === "") {
-      setSaveError("The task name can't be empty.");
+      setSaveError("The task name cannot be empty.");
       return;
     }
     if (dueDate !== originalDueDate && isPast(dueDate)) {
-      setSaveError("The due date can't be in the past.");
+      setSaveError("The due date cannot be in the past.");
       return;
     }
     try {
@@ -111,7 +127,7 @@ export default function TaskDetailsPage() {
       navigate(`/lists/${listId}`);
     } catch (err) {
       setShowWarning(false);
-      setSaveError("Couldn't delete the task.");
+      setSaveError("Could not delete the task.");
     }
   }
 
@@ -124,116 +140,178 @@ export default function TaskDetailsPage() {
   }
   const isPast = (date) => date !== "" && date < todayString();
 
+  const getChipColor = (value) => {
+    if (value.startsWith("Low")) return "low";
+    if (value.startsWith("Medium")) return "medium";
+    if (value.startsWith("High")) return "high";
+
+    return "neutral";
+  };
+
   return (
     <div>
-      <Link to={`/lists/${listId}`}>← Back to list</Link>
-      <form onSubmit={handleSave}>
-        <h1 className="light-header">Task Details</h1>
-        <div className="form-field">
-          <input
-            type="text"
-            placeholder="Task name..."
-            value={taskName}
-            onChange={(e) => setTaskName(e.target.value)}
-          />
-        </div>
-        <div className="form-field">
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-          />
-          <input
-            type="time"
-            value={dueTime}
-            disabled={!dueDate}
-            onChange={(e) => setDueTime(e.target.value)}
-          />
-        </div>
-        {/* FOR LATER:
-          <DatePicker
-          label="Due date"
-          minDate={today}
-          value={dueDate ? dayjs(dueDate) : null}
-          onChange={(v) => {
-            const valid = v && v.isValid();
-            setDueDate(valid ? v.format("YYYY-MM-DD") : "");
-            if (!valid) setDueTime("");
-          }}
-          slotProps={{ textField: { id: "due-date" } }}
-        />
+      <Typography variant="h2">
+        <Link className="text-link" to={`/lists/${listId}`}>
+          ← Back to list
+        </Link>
+      </Typography>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <form className="layout-column" onSubmit={handleSave}>
+          <Typography variant="h1">Task Details</Typography>
 
-        <TimePicker
-          label="Due time"
-          ampm={false}
-          disabled={!dueDate}
-          value={dueTime ? dayjs(`2000-01-01T${dueTime}`) : null} // Arbitrary dummy date for the time picker
-          onChange={(v) =>
-            setDueTime(v && v.isValid() ? v.format("HH:mm") : "")
-          }
-          slotProps={{ textField: { id: "due-time" } }}
-        /> */}
-        <div className="form-field">
-          <select
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-          >
-            <option value="No priority">No priority</option>
-            <option value="Low priority">Low priority</option>
-            <option value="Medium priority">Medium priority</option>
-            <option value="High priority">High priority</option>
-          </select>
-        </div>
-        <div className="form-field">
-          <select
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value)}
-          >
-            <option value="No difficulty">No difficulty</option>
-            <option value="Low difficulty">Low difficulty</option>
-            <option value="Medium difficulty">Medium difficulty</option>
-            <option value="High difficulty">High difficulty</option>
-          </select>
-        </div>
-        <div className="form-field">
-          <select
-            value={assignee}
-            onChange={(e) => setAssignee(e.target.value)}
-          >
-            <option value="">Unassigned</option>
-            <option value={list.get("owner").get("username")}>
-              {list.get("owner").get("username")}
-            </option>
-            {members.map((member) => (
-              <option key={member.memberId} value={member.username}>
-                {member.username}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="form-field">
-          <input
-            type="text"
-            placeholder="Notes..."
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-          />
-        </div>
-        <button type="submit" onClick={handleSave}>
-          Save
-        </button>
-        <button type="button" onClick={() => setShowWarning(true)}>
-          Delete
-        </button>
-        {saveError && (
-          <p role="alert" style={{ color: "red" }}>
-            {saveError}
-          </p>
-        )}
-      </form>
+          <div className="layout-column">
+            <div className="form-field">
+              <TextField
+                fullWidth
+                type="text"
+                label={"Task Name"}
+                placeholder={"Task name..."}
+                value={taskName}
+                onChange={(e) => setTaskName(e.target.value)}
+              />
+            </div>
+
+            <div className="form-field layout-row layout-equal-children">
+              <DatePicker
+                label="Due Date"
+                format="DD-MM-YYYY"
+                minDate={dayjs(todayString())}
+                // minDate={dayjs(originalDueDate || todayString())} // Allow for an already overdue task to retain its original date
+                value={dueDate ? dayjs(dueDate) : null}
+                onChange={(v) => {
+                  const valid = v && v.isValid();
+                  setDueDate(valid ? v.format("YYYY-MM-DD") : "");
+                  if (!valid) setDueTime("");
+                }}
+                slotProps={{ textField: { id: "due-date" } }}
+              />
+
+              <TimePicker
+                label="Due Time"
+                ampm={false}
+                disabled={!dueDate}
+                value={dueTime ? dayjs(`2000-01-01T${dueTime}`) : null} // Arbitrary dummy date for the time picker
+                onChange={(v) =>
+                  setDueTime(v && v.isValid() ? v.format("HH:mm") : "")
+                }
+                slotProps={{ textField: { id: "due-time" } }}
+              />
+            </div>
+
+            <div className="form-field">
+              <FormControl fullWidth>
+                <InputLabel>Priority</InputLabel>
+                <Select
+                  value={priority}
+                  label="Priority"
+                  onChange={(e) => setPriority(e.target.value)}
+                  renderValue={(value) => (
+                    <Chip label={value} color={getChipColor(value)} />
+                  )}
+                >
+                  <MenuItem value="No Priority">No Priority</MenuItem>
+                  <MenuItem value="Low Priority">Low Priority</MenuItem>
+                  <MenuItem value="Medium Priority">Medium Priority</MenuItem>
+                  <MenuItem value="High Priority">High Priority</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+
+            <div className="form-field">
+              <FormControl fullWidth>
+                <InputLabel>Difficulty</InputLabel>
+                <Select
+                  value={difficulty}
+                  label="Difficulty"
+                  onChange={(e) => setDifficulty(e.target.value)}
+                  renderValue={(value) => (
+                    <Chip label={value} color={getChipColor(value)} />
+                  )}
+                >
+                  <MenuItem value="No Difficulty">No Difficulty</MenuItem>
+                  <MenuItem value="Low Difficulty">Low Difficulty</MenuItem>
+                  <MenuItem value="Medium Difficulty">
+                    Medium Difficulty
+                  </MenuItem>
+                  <MenuItem value="High difficulty">High Difficulty</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+
+            <div className="form-field">
+              <FormControl fullWidth>
+                <InputLabel>Assignee</InputLabel>
+                <Select
+                  value={assignee}
+                  label="Assignee"
+                  onChange={(e) => setAssignee(e.target.value)}
+                  renderValue={(value) => (
+                    <Chip label={value || "Unassigned"} color="neutral" />
+                  )}
+                >
+                  <MenuItem value="Unassigned">Unassigned</MenuItem>
+                  <MenuItem value={list.get("owner").get("username")}>
+                    {list.get("owner").get("username")}
+                  </MenuItem>
+                  {members.map((member) => (
+                    <MenuItem key={member.memberId} value={member.username}>
+                      {member.username}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+
+            <div className="form-field">
+              <TextField
+                fullWidth
+                type="text"
+                label="Notes"
+                placeholder="Notes..."
+                value={note}
+                multiline={true}
+                minRows={3}
+                maxRows={10}
+                onChange={(e) => setNote(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="form-field layout-row layout-equal-children">
+            <Button type="submit" variant="contained" onClick={handleSave}>
+              Save
+            </Button>
+            <Button
+              type="button"
+              variant="soft"
+              color="danger"
+              onClick={() => setShowWarning(true)}
+            >
+              Delete
+            </Button>
+          </div>
+          {saveError && (
+            <Typography role="alert" color="error">
+              {saveError}
+            </Typography>
+          )}
+        </form>
+      </LocalizationProvider>
       {showWarning && (
         <WarningPopup
-          message={`Are you sure you want to delete "${taskName}"?`}
+          message={
+            <div className="layout-column">
+              <Typography>
+                Are you sure that you want to permanently{" "}
+                <strong className="text-emphasized">
+                  delete the "{taskName}" task
+                </strong>
+                ?
+              </Typography>
+              <Typography>
+                Once deleted, the task cannot be restored.
+              </Typography>
+            </div>
+          }
           onConfirm={handleDelete}
           onClose={() => setShowWarning(false)}
         />

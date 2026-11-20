@@ -9,7 +9,7 @@ export const buttonTheme = {
         // Base styles shared by all button variants
         minWidth: "max-content",
         height: 40,
-        padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
+        padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
 
         // Disabled buttons
         "&.Mui-disabled.MuiButton-contained": {
