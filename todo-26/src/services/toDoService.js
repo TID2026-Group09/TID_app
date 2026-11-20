@@ -12,6 +12,7 @@ function toPlainObject(parseObject) {
   const difficulty = parseObject.get("difficulty");
   return {
     id: parseObject.id,
+    createdAt: parseObject.createdAt,
     taskName: parseObject.get("taskName"),
     done: parseObject.get("done"),
     doneDate: parseObject.get("doneDate"),
