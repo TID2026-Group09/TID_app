@@ -10,6 +10,7 @@ import {
   setToDoDone,
   deleteToDo,
 } from "../services/toDoService.js";
+import { sortDoneDateDescending } from "../services/sortingService.js";
 import { leaveList } from "../services/listMemberService.js";
 import { getCurrentUser } from "../services/authService.js";
 import WarningPopup from "./WarningPopup.jsx";
@@ -19,6 +20,10 @@ export default function ToDoList({ list }) {
   const [toDoList, setToDoList] = useState([]);
   const [showSharing, setShowSharing] = useState(false);
   const [leavePopup, setLeavePopup] = useState(false);
+
+  const completedToDos = sortDoneDateDescending(
+    toDoList.filter((elem) => elem.done),
+  );
 
   // Will run when the component is mounted because of []
   useEffect(() => {
@@ -34,12 +39,12 @@ export default function ToDoList({ list }) {
     setToDoList([...toDoList, created]);
   }
 
-  // Passed to ToDoItem as a prop and used when toggling tasks
+  // Used when checking or unchecking tasks (also updates the doneDate)
   async function handleToggle(id) {
     const toDo = toDoList.find((t) => t.id === id);
-    await setToDoDone(id, !toDo.done);
-    setToDoList(
-      toDoList.map((t) => (t.id === id ? { ...t, done: !t.done } : t)),
+    const updated = await setToDoDone(id, !toDo.done);
+    setToDoList((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, ...updated } : t)),
     );
   }
 
@@ -103,33 +108,47 @@ export default function ToDoList({ list }) {
 
       <div className="surface">
         <Typography variant="h2">Add New Task</Typography>
-        <AddToDoForm
-          onAdd={handleAdd}
-          label={"Task Name"}
-        />
+        <AddToDoForm onAdd={handleAdd} label={"Task Name"} />
       </div>
 
       <div className="surface">
         <Typography variant="h2">Tasks to Do</Typography>
-        {toDoList.length === 0 ? (
+        {toDoList.filter((elem) => elem.done === false).length === 0 ? (
           <Typography>No tasks yet. Enjoy your day!</Typography>
         ) : (
           <ul className="layout-column">
-            {toDoList.map((elem) => (
-              <ToDoItem
-                key={elem.id}
-                ToDoElem={elem}
-                onToggle={handleToggle}
-                onRemove={handleRemove}
-              />
-            ))}
+            {toDoList
+              .filter((elem) => elem.done === false)
+              .map((elem) => (
+                <ToDoItem
+                  key={elem.id}
+                  ToDoElem={elem}
+                  onToggle={handleToggle}
+                  onRemove={handleRemove}
+                />
+              ))}
           </ul>
         )}
       </div>
 
-      <div className="surface" style={{ opacity: 0.5 }}>
+      <div className="surface">
         <Typography variant="h2">Completed Tasks</Typography>
-        {/* TODO: Add functionality for displaying completed tasks */}
+        {completedToDos.filter((elem) => elem.done === true).length === 0 ? (
+          <Typography>No tasks have been completed yet.</Typography>
+        ) : (
+          <ul className="layout-column">
+            {completedToDos
+              .filter((elem) => elem.done === true)
+              .map((elem) => (
+                <ToDoItem
+                  key={elem.id}
+                  ToDoElem={elem}
+                  onToggle={handleToggle}
+                  onRemove={handleRemove}
+                />
+              ))}
+          </ul>
+        )}
       </div>
 
       {/* Show sharing component when share button is clicked */}

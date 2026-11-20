@@ -73,7 +73,6 @@ export async function fetchToDoById(todoId) {
 export async function fetchToDos(list) {
   const query = new Parse.Query(ToDoItem);
   query.equalTo("list", list);
-  query.equalTo("done", false);
   query.ascending("createdAt");
 
   const results = await query.find();
@@ -150,6 +149,8 @@ export async function updateToDo(id, details) {
 export async function setToDoDone(id, done) {
   const item = ToDoItem.createWithoutData(id);
   item.set("done", done);
+  item.set("doneDate", done ? new Date() : null);
+
   return toPlainObject(await item.save());
 }
 
