@@ -1,8 +1,10 @@
-export default function UserIcon({ user }) {
+export default function UserIcon({ user, username }) {
+  const name = username ?? user?.username;
+
   return (
-    <div className="layout-row" key={user.userId}>
+    <span className="layout-row">
       <span className="material-symbols-outlined">account_circle</span>
-      <span>{user.username}</span>
-    </div>
+      <span>{name}</span>
+    </span>
   );
 }

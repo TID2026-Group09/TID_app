@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import dayjs from "dayjs";
 import WarningPopup from "./WarningPopup";
 import { Typography, IconButton } from "@mui/material";
+import UserIcon from "./UserIcon";
+import {isOverdue} from "../services/toDoService"
 
 export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
   const [showWarning, setShowWarning] = useState(false);
@@ -12,9 +15,19 @@ export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
     navigate(`/lists/${listId}/${ToDoElem.id}`);
   }
 
+  function formatDate() {
+    if(ToDoElem.dueDate && ToDoElem.dueTime) {
+      return `${dayjs(ToDoElem.dueDate).format("DD-MM-YYYY")}, ${ToDoElem.dueTime}`
+    } else if (ToDoElem.dueDate) {
+      return `${dayjs(ToDoElem.dueDate).format("DD-MM-YYYY")}`
+    } else {
+      return "No date"
+    }
+  }
+
   return (
-    <li className="layout-row">
-      <div style={{ opacity: ToDoElem.done ? 0.5 : 1, flex: 1 }}>
+    <li >
+      <div className="layout-row" style={{ opacity: ToDoElem.done ? 0.5 : 1, flex: 1 }}>
         <IconButton
           onClick={() => onToggle(ToDoElem.id)}
           aria-label={
@@ -52,6 +65,13 @@ export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
           <span className="material-symbols-outlined delete">delete</span>
         </IconButton>
       </div>
+      <span className="layout-row">
+        <Typography style={isOverdue(ToDoElem.dueDate, ToDoElem.dueTime) ? { color: "red" } : undefined}>{formatDate()}</Typography>
+        <Typography>{ToDoElem.priority}</Typography>
+        <Typography>{ToDoElem.difficulty}</Typography>
+        <Typography><UserIcon username={ToDoElem.assignee}></UserIcon></Typography>
+        
+      </span>
 
       {/* Show warning popup when delete button is clicked */}
       {showWarning && (

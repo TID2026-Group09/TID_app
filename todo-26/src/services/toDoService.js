@@ -26,8 +26,16 @@ function toPlainObject(parseObject) {
 }
 
 // Converts a date and time string to a JS Date object. If no time is provided, it defaults to 23:59 (end of day).
-function convertToDateObject(date, time) {
+export function convertToDateObject(date, time) {
   return new Date(`${date}T${time || "23:59"}`);
+}
+
+export function isOverdue(date, time) {
+  if (!date) {
+    return false;
+  }
+  
+  return convertToDateObject(date, time) < new Date();
 }
 
 // For when the whole list isn't needed
