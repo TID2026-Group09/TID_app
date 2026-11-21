@@ -18,8 +18,6 @@ export const borders = {
 const text = {
   primary: "#202B29",
   secondary: "#004C4C",
-  placeholder: "#757575",
-  disabled: "#757575",
 };
 
 const primary = {
@@ -62,20 +60,20 @@ export const palette = {
   },
 
   action: {
-    disabledDark: text.disabled,
+    disabledDark: "#757575",
     disabledLight: "#FFFFFF",
   },
 
   input: {
     border: {
-      default: text.placeholder,
+      default: "#757575",
       hover: primary.main,
       focus: primary.main,
       error: danger.main,
     },
     text: {
       filled: text.primary,
-      placeholder: text.placeholder,
+      placeholder: "#757575",
       label: text.secondary,
     },
   },
@@ -100,13 +98,13 @@ export const typography = {
     fontSize: 48,
     fontWeight: 500,
     fontVariant: "small-caps",
-    color: primary.dark,
+    color: text.secondary,
   },
   h2: {
     fontSize: 20,
     fontWeight: 500,
     fontVariant: "small-caps",
-    color: primary.dark,
+    color: text.secondary,
   },
   body1: {
     fontSize: 16,
@@ -131,8 +129,8 @@ export const typography = {
   // Custom variants
   chip: {
     fontSize: 16,
-    // fontWeight: 500,
   },
+
   label: {
     fontSize: 16,
     color: text.label,

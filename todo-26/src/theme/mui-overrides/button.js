@@ -52,6 +52,7 @@ export const buttonTheme = {
           },
         }),
       },
+
       // Customized primary outlined button
       {
         props: { variant: "outlined", color: "primary" },
@@ -63,7 +64,7 @@ export const buttonTheme = {
         }),
       },
 
-      // Customized danger outlined button
+      // Custom danger outlined button
       {
         props: { variant: "outlined", color: "danger" },
         style: ({ theme }) => ({
@@ -74,6 +75,7 @@ export const buttonTheme = {
           },
         }),
       },
+
       // Custom soft danger button
       {
         props: { variant: "soft", color: "danger" },
