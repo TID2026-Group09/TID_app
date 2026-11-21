@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography, Button, IconButton } from "@mui/material";
+import { Typography, Button, IconButton, Chip } from "@mui/material";
 import AddToDoForm from "./AddToDoForm.jsx";
 import ToDoItem from "./ToDoItem.jsx";
 import SharingComponent from "./ShareComponent.jsx";
@@ -10,10 +10,14 @@ import {
   setToDoDone,
   deleteToDo,
 } from "../services/toDoService.js";
-import { prioritizeTasks, sortDoneDateDescending } from "../services/sortingService.js";
+import {
+  prioritizeTasks,
+  sortDoneDateDescending,
+} from "../services/sortingService.js";
 import { leaveList } from "../services/listMemberService.js";
 import { getCurrentUser } from "../services/authService.js";
 import WarningPopup from "./WarningPopup.jsx";
+import { getChipColor } from "../utils/chipUtils.js";
 
 export default function ToDoList({ list }) {
   const navigate = useNavigate();
@@ -69,130 +73,126 @@ export default function ToDoList({ list }) {
   }
 
   return (
-    <div className="layout-column">
-      <div className="layout-row layout-between">
-        <Typography variant="h1">{list.get("listName")}</Typography>
+    <div>
+      <Typography variant="h1">{list.get("listName")}</Typography>
+      <div className="layout-column">
+        <div className="layout-row-wrap layout-equal-children">
+          <Button
+            variant="soft"
+            color="danger"
+            onClick={() => setLeavePopup(true)}
+            disabled={
+              list.get("owner").get("username") ===
+              getCurrentUser().get("username")
+            }
+          >
+            Leave List
+          </Button>
 
-        <IconButton
-          onClick={() => setShowSharing(true)}
-          aria-label="Share list"
-          sx={{ mt: -4 }}
-        >
-          <span className="material-symbols-outlined large">group</span>
-        </IconButton>
-      </div>
+          <Button
+            variant="soft"
+            color="danger"
+            // TODO: Implement delete list functionality
+            disabled={
+              list.get("owner").get("username") !==
+              getCurrentUser().get("username")
+            }
+          >
+            Delete List
+          </Button>
 
-      <div className="layout-row layout-equal-children">
-        <Button
-          variant="soft"
-          color="danger"
-          onClick={() => setLeavePopup(true)}
-          disabled={
-            list.get("owner").get("username") ===
-            getCurrentUser().get("username")
-          }
-        >
-          Leave List
-        </Button>
+          <Button variant="outlined" onClick={() => setShowSharing(true)}>
+            Share List
+          </Button>
+        </div>
 
-        <Button
-          variant="soft"
-          color="danger"
-          // TODO: Implement delete list functionality
-          disabled={
-            list.get("owner").get("username") !==
-            getCurrentUser().get("username")
-          }
-        >
-          Delete List
-        </Button>
-      </div>
+        <div className="surface">
+          <Typography variant="h2">Add New Task</Typography>
+          <AddToDoForm onAdd={handleAdd} label={"Task Name"} />
+        </div>
 
-      <div className="surface">
-        <Typography variant="h2">Add New Task</Typography>
-        <AddToDoForm onAdd={handleAdd} label={"Task Name"} />
-      </div>
+        <div className="surface">
+          <Typography variant="h2">Tasks to Do</Typography>
+          {prioritizedTasks.filter((elem) => elem.done === false).length ===
+          0 ? (
+            <Typography>No tasks yet. Enjoy your day!</Typography>
+          ) : (
+            <ul className="layout-column">
+              {prioritizedTasks
+                .filter((elem) => elem.done === false)
+                .map((elem) => (
+                  <ToDoItem
+                    key={elem.id}
+                    ToDoElem={elem}
+                    onToggle={handleToggle}
+                    onRemove={handleRemove}
+                  />
+                ))}
+            </ul>
+          )}
+        </div>
 
-      <div className="surface">
-        <Typography variant="h2">Tasks to Do</Typography>
-        {prioritizedTasks.filter((elem) => elem.done === false).length === 0 ? (
-          <Typography>No tasks yet. Enjoy your day!</Typography>
-        ) : (
-          <ul className="layout-column">
-            {prioritizedTasks
-              .filter((elem) => elem.done === false)
-              .map((elem) => (
-                <ToDoItem
-                  key={elem.id}
-                  ToDoElem={elem}
-                  onToggle={handleToggle}
-                  onRemove={handleRemove}
-                />
-              ))}
-          </ul>
+        <div className="surface">
+          <Typography variant="h2">Completed Tasks</Typography>
+          {completedToDos.filter((elem) => elem.done === true).length === 0 ? (
+            <Typography>No tasks have been completed yet.</Typography>
+          ) : (
+            <ul className="layout-column">
+              {completedToDos
+                .filter((elem) => elem.done === true)
+                .map((elem) => (
+                  <ToDoItem
+                    key={elem.id}
+                    ToDoElem={elem}
+                    onToggle={handleToggle}
+                    onRemove={handleRemove}
+                  />
+                ))}
+            </ul>
+          )}
+        </div>
+
+        {/* Show sharing component when share button is clicked */}
+        {showSharing && (
+          <SharingComponent
+            list={list}
+            todos={toDoList}
+            onRemoveAccess={handleRemoveAccess}
+            onClose={() => setShowSharing(false)}
+          />
+        )}
+        {/* Show leave list warning popup when leave button is clicked */}
+        {leavePopup && (
+          <WarningPopup
+            message={
+              <div className="layout-column">
+                <Typography>
+                  Are you sure you want to{" "}
+                  <strong className="text-emphasized">
+                    leave the "{list.get("listName")}" list
+                  </strong>
+                  ?
+                </Typography>
+                <Typography>
+                  You have{" "}
+                  <strong className="text-emphasized">
+                    {
+                      toDoList.filter(
+                        (todo) =>
+                          todo.assignee === getCurrentUser().get("username"),
+                      ).length
+                    }{" "}
+                    unfinished task(s){" "}
+                  </strong>
+                  which will become unassigned.
+                </Typography>
+              </div>
+            }
+            onConfirm={handleLeaveList}
+            onClose={() => setLeavePopup(false)}
+          />
         )}
       </div>
-
-      <div className="surface">
-        <Typography variant="h2">Completed Tasks</Typography>
-        {completedToDos.filter((elem) => elem.done === true).length === 0 ? (
-          <Typography>No tasks have been completed yet.</Typography>
-        ) : (
-          <ul className="layout-column">
-            {completedToDos
-              .filter((elem) => elem.done === true)
-              .map((elem) => (
-                <ToDoItem
-                  key={elem.id}
-                  ToDoElem={elem}
-                  onToggle={handleToggle}
-                  onRemove={handleRemove}
-                />
-              ))}
-          </ul>
-        )}
-      </div>
-
-      {/* Show sharing component when share button is clicked */}
-      {showSharing && (
-        <SharingComponent
-          list={list}
-          todos={toDoList}
-          onRemoveAccess={handleRemoveAccess}
-          onClose={() => setShowSharing(false)}
-        />
-      )}
-      {/* Show leave list warning popup when leave button is clicked */}
-      {leavePopup && (
-        <WarningPopup
-          message={
-            <div className="layout-column">
-              <Typography>
-                Are you sure you want to{" "}
-                <strong className="text-emphasized">
-                  leave the "{list.get("listName")}" list
-                </strong>
-                ?
-              </Typography>
-              <Typography>
-                You have{" "}
-                <strong className="text-emphasized">
-                  {
-                    toDoList.filter(
-                      (todo) =>
-                        todo.assignee === getCurrentUser().get("username"),
-                    ).length
-                  }{" "}
-                  unfinished task(s){" "}
-                </strong>
-                which will become unassigned.
-              </Typography>
-            </div>
-          }
-          onConfirm={handleLeaveList}
-          onClose={() => setLeavePopup(false)}
-        />
-      )}
     </div>
   );
 }

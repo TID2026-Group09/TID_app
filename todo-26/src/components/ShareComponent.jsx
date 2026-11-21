@@ -113,7 +113,7 @@ export default function ShareComponent({
               label={"Username"}
               placeholder="Enter a username..."
             />
-            {error && <Typography color="danger">{error}</Typography>}
+            {error && <Typography color="error">{error}</Typography>}
             <Typography>Owner:</Typography>
             <UserIcon user={{ username: list.get("owner").get("username") }} />
             <Typography>Currently shared with:</Typography>

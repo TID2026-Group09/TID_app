@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import WarningPopup from "./WarningPopup";
-import { Typography, IconButton } from "@mui/material";
+import { Typography, IconButton, Chip } from "@mui/material";
 import UserIcon from "./UserIcon";
 import { isOverdue } from "../services/toDoService";
+import { getChipColor } from "../utils/chipUtils";
 
 export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
   const [showWarning, setShowWarning] = useState(false);
@@ -21,7 +22,7 @@ export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
     } else if (ToDoElem.dueDate) {
       return `${dayjs(ToDoElem.dueDate).format("DD-MM-YYYY")}`;
     } else {
-      return "No date";
+      return "No Date";
     }
   }
 
@@ -68,7 +69,8 @@ export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
           <span className="material-symbols-outlined delete">delete</span>
         </IconButton>
       </div>
-      <span className="layout-row" onClick={openDetails}>
+
+      {/* <span className="layout-row" onClick={openDetails}>
         <Typography
           style={
             isOverdue(ToDoElem.dueDate, ToDoElem.dueTime)
@@ -83,7 +85,28 @@ export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
         <Typography>
           <UserIcon username={ToDoElem.assignee}></UserIcon>
         </Typography>
-      </span>
+      </span> */}
+
+      <div className="layout-row-wrap" onClick={openDetails}>
+        <Chip
+          label={formatDate()}
+          color={
+            isOverdue(ToDoElem.dueDate, ToDoElem.dueTime) ? "high" : "neutral"
+          }
+        />
+        <Chip
+          label={ToDoElem.priority}
+          color={getChipColor(ToDoElem.priority)}
+        />
+        <Chip
+          label={ToDoElem.difficulty}
+          color={getChipColor(ToDoElem.difficulty)}
+        />
+        <Chip
+          label={<UserIcon username={ToDoElem.assignee} />}
+          color="neutral"
+        />
+      </div>
 
       {/* Show warning popup when delete button is clicked */}
       {showWarning && (

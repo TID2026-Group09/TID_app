@@ -44,11 +44,16 @@ const danger = {
   hoverSoft: "#EED0CE",
 };
 
+const error = {
+  main: "#B42318",
+};
+
 // Composed palette
 export const palette = {
   primary,
   secondary,
   danger,
+  error,
   text,
 
   background: {
@@ -64,14 +69,14 @@ export const palette = {
   input: {
     border: {
       default: text.placeholder,
-      hover: primary.dark,
-      focus: primary.dark,
+      hover: primary.main,
+      focus: primary.main,
       error: danger.main,
     },
     text: {
       filled: text.primary,
       placeholder: text.placeholder,
-      label: primary.dark,
+      label: text.secondary,
     },
   },
 
@@ -126,10 +131,10 @@ export const typography = {
   // Custom variants
   chip: {
     fontSize: 16,
-    fontWeight: 500,
+    // fontWeight: 500,
   },
   label: {
     fontSize: 16,
-    color: primary.dark,
+    color: text.label,
   },
 };

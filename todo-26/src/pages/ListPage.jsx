@@ -26,7 +26,7 @@ export default function ListPage() {
   if (error) {
     return (
       <div className="layout-column">
-        <Typography color="danger">{error}</Typography>
+        <Typography color="error">{error}</Typography>
         <Typography variant="h2">
           <Link to="/" className="text-link">
             ← Back to all lists

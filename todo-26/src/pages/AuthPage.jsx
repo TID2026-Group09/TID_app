@@ -34,11 +34,7 @@ export default function AuthPage({ onAuthenticated }) {
       <Typography variant="h1">Welcome</Typography>
       <form onSubmit={handleLogIn}>
         <div className="layout-column">
-          {error && (
-            <Typography variant="body1" color="danger">
-              {error}
-            </Typography>
-          )}
+          {error && <Typography color="error">{error}</Typography>}
 
           <TextField
             label="Username"
