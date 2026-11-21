@@ -76,7 +76,7 @@ export default function ToDoList({ list }) {
     <div>
       <Typography variant="h1">{list.get("listName")}</Typography>
       <div className="layout-column">
-        <div className="layout-row layout-equal-children">
+        <div className="layout-row-wrap layout-equal-children">
           <Button
             variant="soft"
             color="danger"
