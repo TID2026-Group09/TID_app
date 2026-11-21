@@ -18,8 +18,8 @@ function toPlainObject(parseObject) {
     doneDate: parseObject.get("doneDate"),
     dueDate: parseObject.get("dueDate"),
     dueTime: parseObject.get("dueTime"),
-    priority: priority ? priority : "No priority",
-    difficulty: difficulty ? difficulty : "No difficulty",
+    priority: priority ? priority : "No Priority",
+    difficulty: difficulty ? difficulty : "No Difficulty",
     assignee: assignee ? assignee : "Unassigned",
     note: parseObject.get("note"),
     list: list ? list.id : null,
@@ -35,7 +35,7 @@ export function isOverdue(date, time) {
   if (!date) {
     return false;
   }
-  
+
   return convertToDateObject(date, time) < new Date();
 }
 
@@ -88,7 +88,7 @@ export async function fetchToDos(list) {
   return results.map(toPlainObject);
 }
 
-// Checks if a state of a task/item is empty and unsets it 
+// Checks if a state of a task/item is empty and unsets it
 function setOrUnset(item, field, value) {
   if (value === undefined || value == null || value === "") {
     item.unset(field);
@@ -97,9 +97,10 @@ function setOrUnset(item, field, value) {
   }
 }
 
-// 
+//
 function applyDetails(item, details = {}) {
-  const { taskName, dueDate, dueTime, priority, difficulty, assignee, note } = details;
+  const { taskName, dueDate, dueTime, priority, difficulty, assignee, note } =
+    details;
 
   if (taskName !== undefined) {
     item.set("taskName", taskName.trim());
@@ -114,12 +115,12 @@ function applyDetails(item, details = {}) {
     setOrUnset(item, "dueTime", dueTime);
   }
 
-  // "No priority and "No diffifucty" is stored as the default options
+  // "No Priority" and "No Difficulty" is stored as the default options
   if (priority !== undefined) {
-    item.set("priority", priority || "No priority");
+    item.set("priority", priority || "No Priority");
   }
   if (difficulty !== undefined) {
-    item.set("difficulty", difficulty || "No difficulty");
+    item.set("difficulty", difficulty || "No Difficulty");
   }
 
   // Unassinged = no value in the database in case of username "Unassigned"
@@ -137,10 +138,10 @@ export async function createToDo(taskName, list, details = {}) {
   item.set("taskName", taskName);
   item.set("done", false);
   item.set("list", list);
-  item.set("priority", "No priority");
-  item.set("difficulty", "No difficulty");
+  item.set("priority", "No Priority");
+  item.set("difficulty", "No Difficulty");
 
-  applyDetails(item, {...details, taskName})
+  applyDetails(item, { ...details, taskName });
 
   const acl = list.getACL();
   item.setACL(acl);
