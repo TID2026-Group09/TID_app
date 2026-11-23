@@ -74,7 +74,9 @@ export default function ShareComponent({
 
   // Number of assigned tasks for the member that is about to be removed (for the warning message)
   const unfinishedCount = memberToRemove
-    ? todos.filter((todo) => todo.assignee === memberToRemove.username).length
+    ? todos.filter(
+        (todo) => todo.assignee === memberToRemove.username && !todo.done,
+      ).length
     : 0;
 
   return (

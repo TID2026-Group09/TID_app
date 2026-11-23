@@ -2,6 +2,7 @@ import Parse from "./parse.js";
 
 const ToDoItem = Parse.Object.extend("ToDoItem");
 const List = Parse.Object.extend("List");
+const ListMember = Parse.Object.extend("ListMember");
 
 // Converts a Parse object to a plain JS object.
 // Pointers need to fetch their related class before they can proceed.
@@ -56,6 +57,16 @@ export async function createList(title) {
   list.setACL(new Parse.ACL(currentUser));
 
   return await list.save();
+}
+
+// Delete all list memberships and to dos for a list and then the list
+export async function deleteList(list) { 
+  console.log(list, list instanceof Parse.Object);
+  const members = await new Parse.Query(ListMember).equalTo("list", list).findAll();
+  const todos = await new Parse.Query(ToDoItem).equalTo("list", list).findAll();
+
+  await Parse.Object.destroyAll([...members, ...todos]);
+  await list.destroy();
 }
 
 // Fetch all lists for the current user (based on ACL)
