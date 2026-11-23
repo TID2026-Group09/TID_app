@@ -9,6 +9,7 @@ import {
   createToDo,
   setToDoDone,
   deleteToDo,
+  deleteList,
 } from "../services/toDoService.js";
 import {
   prioritizeTasks,
@@ -24,6 +25,7 @@ export default function ToDoList({ list }) {
   const [toDoList, setToDoList] = useState([]);
   const [showSharing, setShowSharing] = useState(false);
   const [leavePopup, setLeavePopup] = useState(false);
+  const [deleteListPopup, setDeleteListPopup] = useState(false);
 
   const completedToDos = sortDoneDateDescending(
     toDoList.filter((elem) => elem.done),
@@ -52,6 +54,11 @@ export default function ToDoList({ list }) {
     setToDoList((prev) =>
       prev.map((t) => (t.id === id ? { ...t, ...updated } : t)),
     );
+  }
+
+  async function handleDeleteList(list) {
+    await deleteList(list);
+    navigate("/");
   }
 
   // Passed to ToDoItem as a prop and used when deleting tasks
@@ -92,7 +99,7 @@ export default function ToDoList({ list }) {
           <Button
             variant="soft"
             color="danger"
-            // TODO: Implement delete list functionality
+            onClick={() => setDeleteListPopup(true)}
             disabled={
               list.get("owner").get("username") !==
               getCurrentUser().get("username")
@@ -179,7 +186,8 @@ export default function ToDoList({ list }) {
                     {
                       toDoList.filter(
                         (todo) =>
-                          todo.assignee === getCurrentUser().get("username"),
+                          todo.assignee === getCurrentUser().get("username") &&
+                          !todo.done,
                       ).length
                     }{" "}
                     unfinished task(s){" "}
@@ -190,6 +198,32 @@ export default function ToDoList({ list }) {
             }
             onConfirm={handleLeaveList}
             onClose={() => setLeavePopup(false)}
+          />
+        )}
+        {/* Show delete list warning popup when delete button is clicked */}
+        {deleteListPopup && (
+          <WarningPopup
+            message={
+              <div className="layout-column">
+                <Typography>
+                  Are you sure you want to{" "}
+                  <strong className="text-emphasized">
+                    delete the "{list.get("listName")}" list
+                  </strong>
+                  ?
+                </Typography>
+                <Typography>
+                  It has{" "}
+                  <strong className="text-emphasized">
+                    {toDoList.filter((todo) => todo.done === false).length}{" "}
+                    unfinished task(s){" "}
+                  </strong>
+                  and will also be deleted for the people it has been shared with.
+                </Typography>
+              </div>
+            }
+            onConfirm={() => handleDeleteList(list)}
+            onClose={() => setDeleteListPopup(false)}
           />
         )}
       </div>
