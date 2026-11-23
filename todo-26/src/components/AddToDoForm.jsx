@@ -33,13 +33,13 @@ export default function AddToDoForm({ onAdd }) {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
         />
-        <div className="layout-row layout-equal-children">
+        <div className="layout-row-wrap layout-equal-children">
           <Button
             type="submit"
             variant="contained"
             disabled={inputValue.trim().length === 0}
           >
-            {"Quick Add"}
+            Quick Add
           </Button>
           <Button
             type="button"
@@ -47,7 +47,7 @@ export default function AddToDoForm({ onAdd }) {
             variant="outlined"
             disabled={inputValue.trim().length === 0}
           >
-            {"Detailed Add"}
+            Detailed Add
           </Button>
         </div>
       </div>

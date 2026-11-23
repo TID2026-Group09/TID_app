@@ -9,9 +9,24 @@ import {
 } from "../services/toDoService.js";
 import { getListMembers } from "../services/listMemberService.js";
 import WarningPopup from "../components/WarningPopup.jsx";
-// import dayjs from "dayjs";
-// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-// import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import {
+  TextField,
+  Typography,
+  Button,
+  Select,
+  MenuItem,
+  Chip,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
+import dayjs from "dayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import "dayjs/locale/da";
+import { getChipColor } from "../utils/chipUtils.js";
+import UserIcon from "../components/UserIcon.jsx";
 
 export default function TaskDetailsPage() {
   const navigate = useNavigate();
@@ -75,18 +90,22 @@ export default function TaskDetailsPage() {
     };
   }, [listId, todoId]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Typography>Loading...</Typography>;
   if (loadError)
-    return <Link to={`/lists/${listId}`}>{loadError} Back to list</Link>;
+    return (
+      <Link className="text-link" to={`/lists/${listId}`}>
+        {loadError}← Back to list
+      </Link>
+    );
 
   async function handleSave(e) {
     e.preventDefault();
     if (taskName === "") {
-      setSaveError("The task name can't be empty.");
+      setSaveError("The task name cannot be empty.");
       return;
     }
     if (dueDate !== originalDueDate && isPast(dueDate)) {
-      setSaveError("The due date can't be in the past.");
+      setSaveError("The due date cannot be in the past.");
       return;
     }
     try {
@@ -111,129 +130,229 @@ export default function TaskDetailsPage() {
       navigate(`/lists/${listId}`);
     } catch (err) {
       setShowWarning(false);
-      setSaveError("Couldn't delete the task.");
+      setSaveError("Could not delete the task.");
     }
   }
 
-  const pad = (n) => String(n).padStart(2, "0");
+  // The below pad and todayString can be simplified using dayjs
 
-  // Today as "YYYY-MM-DD" in local time. These strings compare correctly with < and >.
-  function todayString() {
-    const d = new Date();
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-  }
+  // const pad = (n) => String(n).padStart(2, "0");
+
+  // // Today as "YYYY-MM-DD" in local time. These strings compare correctly with < and >.
+  // function todayString() {
+  //   const d = new Date();
+  //   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  // }
+
+  // Can replace pad and todayString above
+  const todayString = () => dayjs().format("YYYY-MM-DD");
+
   const isPast = (date) => date !== "" && date < todayString();
+
+  const PRIORITY_OPTIONS = [
+    "No Priority",
+    "Low Priority",
+    "Medium Priority",
+    "High Priority",
+  ];
+
+  const DIFFICULTY_OPTIONS = [
+    "No Difficulty",
+    "Low Difficulty",
+    "Medium Difficulty",
+    "High Difficulty",
+  ];
 
   return (
     <div>
-      <Link to={`/lists/${listId}`}>← Back to list</Link>
-      <form onSubmit={handleSave}>
-        <h1 className="light-header">Task Details</h1>
-        <div className="form-field">
-          <input
-            type="text"
-            placeholder="Task name..."
-            value={taskName}
-            onChange={(e) => setTaskName(e.target.value)}
-          />
-        </div>
-        <div className="form-field">
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-          />
-          <input
-            type="time"
-            value={dueTime}
-            disabled={!dueDate}
-            onChange={(e) => setDueTime(e.target.value)}
-          />
-        </div>
-        {/* FOR LATER:
-          <DatePicker
-          label="Due date"
-          minDate={today}
-          value={dueDate ? dayjs(dueDate) : null}
-          onChange={(v) => {
-            const valid = v && v.isValid();
-            setDueDate(valid ? v.format("YYYY-MM-DD") : "");
-            if (!valid) setDueTime("");
-          }}
-          slotProps={{ textField: { id: "due-date" } }}
-        />
+      <Typography variant="h2">
+        <Link className="text-link" to={`/lists/${listId}`}>
+          ← Back to list
+        </Link>
+      </Typography>
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="da">
+        <form className="layout-column" onSubmit={handleSave}>
+          <Typography variant="h1">Task Details</Typography>
 
-        <TimePicker
-          label="Due time"
-          ampm={false}
-          disabled={!dueDate}
-          value={dueTime ? dayjs(`2000-01-01T${dueTime}`) : null} // Arbitrary dummy date for the time picker
-          onChange={(v) =>
-            setDueTime(v && v.isValid() ? v.format("HH:mm") : "")
-          }
-          slotProps={{ textField: { id: "due-time" } }}
-        /> */}
-        <div className="form-field">
-          <select
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-          >
-            <option value="No priority">No priority</option>
-            <option value="Low priority">Low priority</option>
-            <option value="Medium priority">Medium priority</option>
-            <option value="High priority">High priority</option>
-          </select>
-        </div>
-        <div className="form-field">
-          <select
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value)}
-          >
-            <option value="No difficulty">No difficulty</option>
-            <option value="Low difficulty">Low difficulty</option>
-            <option value="Medium difficulty">Medium difficulty</option>
-            <option value="High difficulty">High difficulty</option>
-          </select>
-        </div>
-        <div className="form-field">
-          <select
-            value={assignee}
-            onChange={(e) => setAssignee(e.target.value)}
-          >
-            <option value="">Unassigned</option>
-            <option value={list.get("owner").get("username")}>
-              {list.get("owner").get("username")}
-            </option>
-            {members.map((member) => (
-              <option key={member.memberId} value={member.username}>
-                {member.username}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="form-field">
-          <input
-            type="text"
-            placeholder="Notes..."
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-          />
-        </div>
-        <button type="submit" onClick={handleSave}>
-          Save
-        </button>
-        <button type="button" onClick={() => setShowWarning(true)}>
-          Delete
-        </button>
-        {saveError && (
-          <p role="alert" style={{ color: "red" }}>
-            {saveError}
-          </p>
-        )}
-      </form>
+          <div className="layout-column">
+            <div className="form-field">
+              <TextField
+                fullWidth
+                label={"Task Name"}
+                placeholder={"Task name..."}
+                value={taskName}
+                onChange={(e) => setTaskName(e.target.value)}
+              />
+            </div>
+
+            <div className="form-field layout-row layout-equal-children">
+              <DatePicker
+                label="Due Date"
+                // Can be left out when setting adapterLocale="da" in LocalizationProvider,
+                // however, the display format will be DD.MM.YYYY, i.e., "." instead of "-"
+                format="DD-MM-YYYY"
+                displayWeekNumber
+                minDate={dayjs(todayString())}
+                value={dueDate ? dayjs(dueDate) : null}
+                onChange={(v) => {
+                  const valid = v && v.isValid();
+                  setDueDate(valid ? v.format("YYYY-MM-DD") : "");
+                  if (!valid) setDueTime("");
+                }}
+                slotProps={{ textField: { id: "due-date" } }}
+              />
+
+              <TimePicker
+                label="Due Time"
+                // Can be left out when setting adapterLocale="da" in LocalizationProvider
+                // ampm={false}
+                disabled={!dueDate}
+                value={dueTime ? dayjs(`2000-01-01T${dueTime}`) : null} // Arbitrary dummy date for the time picker
+                onChange={(v) =>
+                  setDueTime(v && v.isValid() ? v.format("HH:mm") : "")
+                }
+                slotProps={{ textField: { id: "due-time" } }}
+              />
+            </div>
+
+            <div className="form-field">
+              <FormControl fullWidth>
+                <InputLabel>Priority</InputLabel>
+                <Select
+                  value={priority}
+                  label="Priority"
+                  onChange={(e) => setPriority(e.target.value)}
+                  // Render selected priority as color-coded chip inside closed input
+                  renderValue={(value) => (
+                    <Chip label={value} color={getChipColor(value)} />
+                  )}
+                >
+                  {/* Render each priority option as matching color-coded chip */}
+                  {PRIORITY_OPTIONS.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      <Chip label={option} color={getChipColor(option)} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+
+            <div className="form-field">
+              <FormControl fullWidth>
+                <InputLabel>Difficulty</InputLabel>
+                <Select
+                  value={difficulty}
+                  label="Difficulty"
+                  onChange={(e) => setDifficulty(e.target.value)}
+                  renderValue={(value) => (
+                    <Chip label={value} color={getChipColor(value)} />
+                  )}
+                >
+                  {DIFFICULTY_OPTIONS.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      <Chip label={option} color={getChipColor(option)} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+
+            <div className="form-field">
+              <FormControl fullWidth>
+                <InputLabel>Assignee</InputLabel>
+                <Select
+                  // Fall back to "Unassigned" when assignee state is "" (unassigned in DB)
+                  value={assignee || "Unassigned"}
+                  label="Assignee"
+                  onChange={(e) => setAssignee(e.target.value)}
+                  // Render selected assignee (or Unassigned) as a neutral chip inside the closed input
+                  renderValue={(value) => (
+                    <Chip
+                      label={<UserIcon username={value || "Unassigned"} />}
+                      color="neutral"
+                    />
+                  )}
+                >
+                  {/* Unassigned default option */}
+                  <MenuItem value="Unassigned">
+                    <Chip
+                      label={<UserIcon username="Unassigned" />}
+                      color="neutral"
+                    />
+                  </MenuItem>
+                  {/* List owner option */}
+                  <MenuItem value={list.get("owner").get("username")}>
+                    <Chip
+                      label={
+                        <UserIcon
+                          username={list.get("owner").get("username")}
+                        />
+                      }
+                      color="neutral"
+                    />
+                  </MenuItem>
+                  {/* List member options */}
+                  {members.map((member) => (
+                    <MenuItem key={member.memberId} value={member.username}>
+                      <Chip
+                        label={<UserIcon username={member.username} />}
+                        color="neutral"
+                      />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+
+            <div className="form-field">
+              <TextField
+                fullWidth
+                label="Notes"
+                placeholder="Notes..."
+                value={note}
+                multiline
+                minRows={3}
+                maxRows={10}
+                onChange={(e) => setNote(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="form-field layout-row layout-equal-children">
+            <Button type="submit" variant="contained">
+              Save
+            </Button>
+            <Button
+              type="button"
+              variant="soft"
+              color="danger"
+              onClick={() => setShowWarning(true)}
+            >
+              Delete
+            </Button>
+          </div>
+          {saveError && (
+            <Typography role="alert" color="error">
+              {saveError}
+            </Typography>
+          )}
+        </form>
+      </LocalizationProvider>
       {showWarning && (
         <WarningPopup
-          message={`Are you sure you want to delete "${taskName}"?`}
+          message={
+            <div className="layout-column">
+              <Typography>
+                Are you sure that you want to permanently{" "}
+                <strong className="text-emphasized">
+                  delete the "{taskName}" task
+                </strong>
+                ?
+              </Typography>
+              <Typography>
+                Once deleted, the task cannot be restored.
+              </Typography>
+            </div>
+          }
           onConfirm={handleDelete}
           onClose={() => setShowWarning(false)}
         />

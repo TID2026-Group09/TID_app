@@ -11,13 +11,14 @@
 
 /* Overall app content */
 .app-content {
+  min-width: 260px;
   max-width: 600px;
   margin-inline: auto;
   padding: calc(var(--mui-spacing) * 4);
 }
 
 .login-page {
-  max-width: calc(var(--mui-spacing) * 100);
+  max-width: 400px;
   margin-inline: auto;
 }
 
@@ -27,13 +28,23 @@
 .surface {
   background-color: var(--mui-palette-background-paper);
   border-radius: var(--mui-shape-borderRadius);
-  padding: calc(var(--mui-spacing) * 3);
+  padding: calc(var(--mui-spacing) * 4);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 /* Horizontal layout with consistent spacing between children */
 .layout-row {
   display: flex;
+  gap: calc(var(--mui-spacing) * 2);
+  width: 100%;
+  align-items: center;
+}
+
+/* Horizontal layout that wraps children when necessary */
+.layout-row-wrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: calc(var(--mui-spacing) * 2);
   width: 100%;
   align-items: center;
