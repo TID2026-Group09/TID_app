@@ -5,6 +5,9 @@ import { Typography, IconButton, Chip } from "@mui/material";
 import UserIcon from "./UserIcon";
 import { isOverdue, formatDate } from "../services/dateService";
 import { getChipColor } from "../utils/chipUtils";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
 export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
   const [showWarning, setShowWarning] = useState(false);
@@ -27,12 +30,9 @@ export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
             ToDoElem.done ? "Mark task as undone" : "Mark task as done"
           }
           aria-pressed={ToDoElem.done}
+          sx={{ color: "primary.dark" }}
         >
-          <span
-            className={`material-symbols-outlined ${ToDoElem.done ? "filled" : ""}`} // display filled icon variant, if task is done
-          >
-            {ToDoElem.done ? "check_box" : "check_box_outline_blank"}
-          </span>
+          {ToDoElem.done ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
         </IconButton>
 
         <span
@@ -55,26 +55,9 @@ export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
           onClick={() => setShowWarning(true)}
           aria-label="Delete task"
         >
-          <span className="material-symbols-outlined delete">delete</span>
+          <DeleteOutlinedIcon sx={{ color: "secondary.dark" }} />
         </IconButton>
       </div>
-
-      {/* <span className="layout-row" onClick={openDetails}>
-        <Typography
-          style={
-            isOverdue(ToDoElem.dueDate, ToDoElem.dueTime)
-              ? { color: "red" }
-              : undefined
-          }
-        >
-          {formatDate()}
-        </Typography>
-        <Typography>{ToDoElem.priority}</Typography>
-        <Typography>{ToDoElem.difficulty}</Typography>
-        <Typography>
-          <UserIcon username={ToDoElem.assignee}></UserIcon>
-        </Typography>
-      </span> */}
 
       <div className="layout-row-wrap" onClick={openDetails}>
         <Chip
