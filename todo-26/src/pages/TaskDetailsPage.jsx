@@ -27,6 +27,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/da";
 import { getChipColor } from "../utils/chipUtils.js";
 import UserIcon from "../components/UserIcon.jsx";
+import { ArrowBackOutlined } from "@mui/icons-material";
 
 export default function TaskDetailsPage() {
   const navigate = useNavigate();
@@ -91,12 +92,18 @@ export default function TaskDetailsPage() {
   }, [listId, todoId]);
 
   if (loading) return <Typography>Loading...</Typography>;
-  if (loadError)
+
+  if (loadError) {
     return (
-      <Link className="text-link" to={`/lists/${listId}`}>
-        {loadError}← Back to list
-      </Link>
+      <div className="layout-column">
+        <Typography color="error">{loadError}</Typography>
+        <Link to={`/lists/${listId}`} className="text-link">
+          <ArrowBackOutlined />
+          Back to list
+        </Link>
+      </div>
     );
+  }
 
   async function handleSave(e) {
     e.preventDefault();
@@ -165,11 +172,6 @@ export default function TaskDetailsPage() {
 
   return (
     <div>
-      <Typography variant="h2">
-        <Link className="text-link" to={`/lists/${listId}`}>
-          ← Back to list
-        </Link>
-      </Typography>
       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="da">
         <form className="layout-column" onSubmit={handleSave}>
           <Typography variant="h1">Task Details</Typography>

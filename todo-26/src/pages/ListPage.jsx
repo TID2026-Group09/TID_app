@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-
 import { Typography } from "@mui/material";
-
 import ToDoList from "../components/ToDoList.jsx";
 import { fetchListById } from "../services/toDoService.js";
+import { ArrowBackOutlined } from "@mui/icons-material";
 
 export default function ListPage() {
   const { listId } = useParams();
@@ -27,11 +26,10 @@ export default function ListPage() {
     return (
       <div className="layout-column">
         <Typography color="error">{error}</Typography>
-        <Typography variant="h2">
-          <Link to="/" className="text-link">
-            ← Back to all lists
-          </Link>
-        </Typography>
+        <Link to="/" className="text-link">
+          <ArrowBackOutlined />
+          Back to all lists
+        </Link>
       </div>
     );
   }
@@ -40,14 +38,5 @@ export default function ListPage() {
     return <Typography>Loading...</Typography>;
   }
 
-  return (
-    <div className="layout-column">
-      <Typography variant="h2">
-        <Link to="/" className="text-link">
-          ← Back to all lists
-        </Link>
-      </Typography>
-      <ToDoList key={list.id} list={list} />
-    </div>
-  );
+  return <ToDoList key={list.id} list={list} />;
 }

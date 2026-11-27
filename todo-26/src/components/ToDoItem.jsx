@@ -54,8 +54,9 @@ export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
         <IconButton
           onClick={() => setShowWarning(true)}
           aria-label="Delete task"
+          sx={{ color: "secondary.dark" }}
         >
-          <DeleteOutlinedIcon sx={{ color: "secondary.dark" }} />
+          <DeleteOutlinedIcon />
         </IconButton>
       </div>
 

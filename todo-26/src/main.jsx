@@ -9,9 +9,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <main className="app-content">
-        <App />
-      </main>
+      <App />
     </ThemeProvider>
   </StrictMode>,
 );

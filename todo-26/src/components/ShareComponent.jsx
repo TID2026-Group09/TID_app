@@ -1,8 +1,3 @@
-// import {
-//   shareList,
-//   getListMembers,
-//   removeUserFromList,
-// } from "../services/toDoService.js";
 import { Typography, Button, IconButton } from "@mui/material";
 import {
   shareList,

@@ -40,8 +40,8 @@ export default function ToDoList({ list }) {
     }
     load();
 
-    const interval = setInterval(load, 5000);
-    return () => clearInterval(interval);
+    // const interval = setInterval(load, 5000);
+    // return () => clearInterval(interval);
   }, []);
 
   // Passed on to ToDoForm as a prop and used by it to add new tasks
@@ -221,7 +221,8 @@ export default function ToDoList({ list }) {
                     {toDoList.filter((todo) => todo.done === false).length}{" "}
                     unfinished task(s){" "}
                   </strong>
-                  and will also be deleted for the people it has been shared with.
+                  and will also be deleted for the people it has been shared
+                  with.
                 </Typography>
               </div>
             }
