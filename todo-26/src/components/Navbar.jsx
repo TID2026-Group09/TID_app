@@ -32,28 +32,31 @@ export default function Navbar({
 
   return (
     <nav className="navbar">
-      {/* Empty div serves as placeholder to maintain three-column grid layout  */}
-      {isLandingPage ? (
-        <div />
-      ) : (
-        <Button
-          color="inherit"
-          startIcon={<ArrowBackOutlinedIcon />}
-          onClick={handleBack}
-        >
-          Back
-        </Button>
+      {user && (
+        <>
+          {isLandingPage ? (
+            <div />
+          ) : (
+            <Button
+              color="inherit"
+              startIcon={<ArrowBackOutlinedIcon />}
+              onClick={handleBack}
+            >
+              Back
+            </Button>
+          )}
+
+          <UserIcon user={user} variant="h2" />
+
+          <Button
+            color="inherit"
+            endIcon={<LogoutOutlinedIcon />}
+            onClick={onLogout}
+          >
+            Logout
+          </Button>
+        </>
       )}
-
-      <UserIcon user={user} variant="h2" />
-
-      <Button
-        color="inherit"
-        endIcon={<LogoutOutlinedIcon />}
-        onClick={onLogout}
-      >
-        Logout
-      </Button>
     </nav>
   );
 }

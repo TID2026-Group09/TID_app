@@ -21,20 +21,27 @@ function App() {
     window.history.replaceState(null, "", import.meta.env.BASE_URL);
   }
 
-  if (!user) {
-    return <AuthPage onAuthenticated={handleAuthenticated} />;
-  }
-
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Navbar user={user} onLogout={handleLogOut} />
+
       <main className="app-content">
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/lists/:listId" element={<ListPage />} />
-          <Route path="/lists/:listId/:todoId" element={<TaskDetailsPage />} />
-          <Route path="*" element={<Link to="/">No such page exists.</Link>} />
-        </Routes>
+        {!user ? (
+          <AuthPage onAuthenticated={handleAuthenticated} />
+        ) : (
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/lists/:listId" element={<ListPage />} />
+            <Route
+              path="/lists/:listId/:todoId"
+              element={<TaskDetailsPage />}
+            />
+            <Route
+              path="*"
+              element={<Link to="/">No such page exists.</Link>}
+            />
+          </Routes>
+        )}
       </main>
     </BrowserRouter>
   );

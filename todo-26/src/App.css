@@ -112,6 +112,7 @@ ul {
   background-color: var(--mui-palette-primary-main);
   padding: calc(var(--mui-spacing) * 2);
   color: var(--mui-palette-primary-contrastText);
+  min-height: 56px;
 }
 
 .navbar h2 {
