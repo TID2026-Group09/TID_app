@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { Typography } from "@mui/material";
-import TextForm from "./TextForm.jsx";
+import TextForm from "../components/TextForm.jsx";
 import { fetchLists, createList } from "../services/toDoService.js";
+import ListSummary from "../components/ListSummary.jsx";
 
-export default function ListOverview() {
+export default function LandingPage() {
   const [lists, setLists] = useState([]);
 
   useEffect(() => {
@@ -48,9 +48,7 @@ export default function ListOverview() {
           <ul className="layout-column">
             {lists.map((list) => (
               <li key={list.id} className="surface">
-                <Link to={`/lists/${list.id}`} className="text-link">
-                  <Typography variant="h2">{list.get("listName")}</Typography>
-                </Link>
+                <ListSummary key={list.id} list={list} />
               </li>
             ))}
           </ul>

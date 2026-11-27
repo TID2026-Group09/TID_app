@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import dayjs from "dayjs";
 import WarningPopup from "./WarningPopup";
 import { Typography, IconButton, Chip } from "@mui/material";
 import UserIcon from "./UserIcon";
-import { isOverdue } from "../services/toDoService";
+import { isOverdue, formatDate } from "../services/dateService";
 import { getChipColor } from "../utils/chipUtils";
 
 export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
@@ -14,16 +13,6 @@ export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
 
   function openDetails() {
     navigate(`/lists/${listId}/${ToDoElem.id}`);
-  }
-
-  function formatDate() {
-    if (ToDoElem.dueDate && ToDoElem.dueTime) {
-      return `${dayjs(ToDoElem.dueDate).format("DD-MM-YYYY")}, ${ToDoElem.dueTime}`;
-    } else if (ToDoElem.dueDate) {
-      return `${dayjs(ToDoElem.dueDate).format("DD-MM-YYYY")}`;
-    } else {
-      return "No Date";
-    }
   }
 
   return (
@@ -89,7 +78,7 @@ export default function ToDoItem({ ToDoElem, onToggle, onRemove }) {
 
       <div className="layout-row-wrap" onClick={openDetails}>
         <Chip
-          label={formatDate()}
+          label={formatDate(ToDoElem)}
           color={
             isOverdue(ToDoElem.dueDate, ToDoElem.dueTime) ? "high" : "neutral"
           }
