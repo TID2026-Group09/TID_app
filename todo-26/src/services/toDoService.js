@@ -27,19 +27,6 @@ function toPlainObject(parseObject) {
   };
 }
 
-// Converts a date and time string to a JS Date object. If no time is provided, it defaults to 23:59 (end of day).
-export function convertToDateObject(date, time) {
-  return new Date(`${date}T${time || "23:59"}`);
-}
-
-export function isOverdue(date, time) {
-  if (!date) {
-    return false;
-  }
-
-  return convertToDateObject(date, time) < new Date();
-}
-
 // For when the whole list isn't needed
 export function createDummyListWithId(listId) {
   return List.createWithoutData(listId);
@@ -61,7 +48,6 @@ export async function createList(title) {
 
 // Delete all list memberships and to dos for a list and then the list
 export async function deleteList(list) { 
-  console.log(list, list instanceof Parse.Object);
   const members = await new Parse.Query(ListMember).equalTo("list", list).findAll();
   const todos = await new Parse.Query(ToDoItem).equalTo("list", list).findAll();
 
@@ -73,6 +59,7 @@ export async function deleteList(list) {
 export async function fetchLists() {
   const query = new Parse.Query(List);
   query.include("owner");
+  query.ascending("listName");
   return await query.find();
 }
 
