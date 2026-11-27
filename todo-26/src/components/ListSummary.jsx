@@ -41,6 +41,8 @@ export default function ToDoList({ list }) {
       setToDoList(await fetchToDos(list));
     }
     load();
+    const interval = setInterval(load, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   // Used when checking or unchecking tasks (also updates the doneDate)

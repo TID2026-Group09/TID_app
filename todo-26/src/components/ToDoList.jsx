@@ -39,6 +39,9 @@ export default function ToDoList({ list }) {
       setToDoList(await fetchToDos(list));
     }
     load();
+
+    const interval = setInterval(load, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   // Passed on to ToDoForm as a prop and used by it to add new tasks
