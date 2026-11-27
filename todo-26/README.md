@@ -1,36 +1,21 @@
-# todo-26
+# App Title [TBD]
 
-The reference to-do app for **Technical Interaction Design**, ITU, Autumn 2026 — built
-live, in the lectures. Your team forks it in week 3.
+## Introduction
 
-## Getting the app from a particular lecture
+The app aims to support people with physical and/or mental challenges, as well as those who support them in their daily lives (e.g., family members and partners), in keeping track of, prioritizing, and coordinating tasks.
 
-Every lecture ends with a tag, so you can check out the app exactly as it stood when you
-walked out of the room:
+## Platform
 
-```bash
-git clone https://github.com/itu-tid/todo-26.git
-cd todo-26
-git checkout week-01
-npm install
-npm run dev
-```
+The app is a mobile-first app, optimized for mobile devices while remaining accessible on larger screens.
 
-`git checkout main` takes you back to the latest, and `git tag` lists every week that
-exists so far. If you switch between tags, run `npm install` again — the dependencies
-change as the course goes on.
+## Installation & Setup
 
-### What is in week-01
+TBA
 
-Components, props, `children`, and rendering a list with keys. **Add** is wired up but only
-logs — making it actually add something needs state, which is lecture 2.
+## Deployment
 
-The commits inside a week are the live coding as it happened, warts and dead ends
-included. The **tag** is applied afterwards, once it has been tidied — so the commits show
-you the process and the tag shows you the version worth reading.
+TBA
 
-## The notes
+## About
 
-Written up at [itu-tid.github.io](https://github.com/itu-tid/itu-tid.github.io#readme),
-with each week also bundled as a PDF at
-[itu-tid.github.io/lecture-notes-pdf](https://itu-tid.github.io/lecture-notes-pdf/).
+The app is build as part of the _Technical Interaction Design (Autumn 2026)_ course at the IT University of Copenhagen.

@@ -1,6 +1,12 @@
 import { useState } from "react";
+import { TextField, Button } from "@mui/material";
 
-export default function TextForm({ onButtonClick, buttonText, placeholder }) {
+export default function TextForm({
+  onButtonClick,
+  buttonText,
+  label,
+  placeholder,
+}) {
   const [inputValue, setInputValue] = useState("");
 
   // Handle submit manually
@@ -11,13 +17,22 @@ export default function TextForm({ onButtonClick, buttonText, placeholder }) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
+    <form className="layout-row layout-fill-first" onSubmit={handleSubmit}>
+      <TextField
+        size="small"
+        label={label}
+        placeholder={placeholder}
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        placeholder={placeholder}
       />
-      <button disabled={inputValue.trim().length === 0}>{buttonText}</button>
+
+      <Button
+        type="submit"
+        variant="contained"
+        disabled={inputValue.trim().length === 0}
+      >
+        {buttonText}
+      </Button>
     </form>
   );
 }

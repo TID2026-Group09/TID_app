@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 
+import { Typography } from "@mui/material";
+
 import ToDoList from "../components/ToDoList.jsx";
 import { fetchListById } from "../services/toDoService.js";
 
@@ -14,7 +16,7 @@ export default function ListPage() {
       try {
         setList(await fetchListById(listId));
       } catch (error) {
-        setError("This list doesn't exist or you don't have access to it.");
+        setError("This list does not exist, or you do not have access to it.");
       }
     }
 
@@ -23,20 +25,28 @@ export default function ListPage() {
 
   if (error) {
     return (
-      <div>
-        <p style={{ color: "white" }}>{error}</p>
-        <Link to="/">← Back to lists</Link>
+      <div className="layout-column">
+        <Typography color="error">{error}</Typography>
+        <Typography variant="h2">
+          <Link to="/" className="text-link">
+            ← Back to all lists
+          </Link>
+        </Typography>
       </div>
     );
   }
 
   if (!list) {
-    return <p>Loading...</p>;
+    return <Typography>Loading...</Typography>;
   }
 
   return (
-    <div>
-      <Link to="/">← Back to all lists</Link>
+    <div className="layout-column">
+      <Typography variant="h2">
+        <Link to="/" className="text-link">
+          ← Back to all lists
+        </Link>
+      </Typography>
       <ToDoList key={list.id} list={list} />
     </div>
   );

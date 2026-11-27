@@ -1,108 +1,157 @@
-* {
-  font-family: "helvetica";
+/***** GLOBAL *****/
+
+/* Include padding and border in element dimensions */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-body {
-    background-color: #444444;
-    color:#444444
+/***** APP AND PAGE LAYOUTS *****/
+
+/* Overall app content */
+.app-content {
+  min-width: 260px;
+  max-width: 600px;
+  margin-inline: auto;
+  padding: calc(var(--mui-spacing) * 4);
 }
 
-h1 {
-    font-family: "Saira Semi Condensed";
-    font-weight: 600;
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    padding: 0;
-    font-size: 1.5rem;
+.login-page {
+  max-width: 400px;
+  margin-inline: auto;
 }
 
-ul {
-    list-style-type: none;
-    padding-left: 0rem;
-    margin: 0.5rem 0;
+/***** REUSABLE SURFACES AND LAYOUTS *****/
+
+/* Simple elevated surface for card look */
+.surface {
+  background-color: var(--mui-palette-background-paper);
+  border-radius: var(--mui-shape-borderRadius);
+  padding: calc(var(--mui-spacing) * 4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
-button {
-    background-color:white;
-    color: #444444;
-    margin-left: 0.5rem;
-    border-radius: 1rem;
-    padding: 0.25rem 0.5rem;
-    border: none;
+/* Horizontal layout with consistent spacing between children */
+.layout-row {
+  display: flex;
+  gap: calc(var(--mui-spacing) * 2);
+  width: 100%;
+  align-items: center;
 }
 
-a {
-    color: #fdfdfd;
-    text-decoration: none;
+/* Horizontal layout that wraps children when necessary */
+.layout-row-wrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: calc(var(--mui-spacing) * 2);
+  width: 100%;
+  align-items: center;
 }
 
-a:hover {
-    text-decoration: underline;
+/* Vertical layout with consistent spacing between children */
+.layout-column {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--mui-spacing) * 3);
+  width: 100%;
 }
 
-.login-screen {
-    color: #fdfdfd;
-    box-sizing: border-box;
-    max-width: 400px;
-    padding: 1.5rem;
-    margin: 0 auto;
-    border-radius: 8px;
-    width: 100%;
+/* All direct children share the available space equally */
+.layout-equal-children > * {
+  flex: 1;
+  min-width: 0;
 }
 
-.login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+/* First direct child fills the remaining available space */
+.layout-fill-first > :first-child {
+  flex: 1;
+  min-width: 0;
 }
 
-.todo-item {
-    display: flex;
-    gap: 0.5rem;
+/* Children pushed to opposite ends */
+.layout-between {
+  justify-content: space-between;
+  align-items: center;
 }
 
-.main-inner {
-    display: flex; 
-    flex-direction: column;
-    gap: 1rem;
+/***** TEXT *****/
+
+.text-emphasized {
+  color: var(--mui-palette-primary-dark);
 }
 
-.todo-list {
-    box-sizing: border-box;
-    max-width: 600px;
-    padding: 1.5rem;
-    margin: 0 auto;
-    border-radius: 8px;
-    width: 100%;
-}  
-
-.delete-button {
-    background-color: transparent;
-    border: none;
-    padding: 0;
+.text-link {
+  color: var(--mui-palette-primary-dark);
+  text-decoration: none;
 }
 
+.text-link:hover {
+  text-decoration: underline;
+}
+
+/***** ICONS *****/
+
+/* Default icon */
 .material-symbols-outlined {
-    vertical-align: middle;
-    font-size: 1.25rem;
-    font-variation-settings:
-        'wght' 300,
-        'FILL' 0,
-        'GRAD' 0,
-        'opsz' 30;
+  font-size: 24px;
+  color: var(--mui-palette-primary-dark);
 }
 
-#add-btn {
-    background-color:#444444;
-    color: white;
-    margin-left: 0.5rem;
-    border-radius: 1rem;
-    padding: 0.25rem 0.5rem;
-    border: none;
+/* Filled icon */
+.material-symbols-outlined.filled {
+  font-variation-settings: "FILL" 1;
 }
 
-@media (min-width: 560px) {
-    h1 {
-        font-size: 2rem;
-    }
+/* Larger icon */
+.material-symbols-outlined.large {
+  font-size: 48px;
+}
+
+/* Delete icon color variant */
+.material-symbols-outlined.delete {
+  color: var(--mui-palette-secondary-dark);
+}
+
+/***** GENERAL ELEMENTS *****/
+
+/* Unordered list */
+ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+/***** POPUPS (WARNING AND SHARING) ******/
+
+.popup {
+  position: relative;
+  background-color: var(--mui-palette-background-paper);
+  border-radius: var(--mui-shape-borderRadius);
+  padding: calc(var(--mui-spacing) * 6);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  max-width: 400px;
+  width: 92%;
+}
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: calc(var(--mui-spacing) * 4);
+}
+
+.popup .close-popup-button {
+  position: absolute;
+  top: calc(var(--mui-spacing) * 3);
+  right: calc(var(--mui-spacing) * 3);
+}
+
+.popup-message {
+  margin-bottom: calc(var(--mui-spacing) * 2);
 }
