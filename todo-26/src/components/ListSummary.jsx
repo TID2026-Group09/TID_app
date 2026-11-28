@@ -14,26 +14,26 @@ export default function ToDoList({ list }) {
   const [toDoList, setToDoList] = useState([]);
 
   // Filter and sort tasks to only have active tasks that are either
-  // assigned to the current user or not assinged
-  const relevantTasks = [...toDoList].filter(
-    (elem) =>
-      elem.done == false &&
-      (elem.assignee === getCurrentUser().get("username") ||
-        elem.assignee === "Unassigned"),
-  ).sort(prioritizeTasks);
+  // assigned to the current user or not assigned
+  const relevantTasks = [...toDoList]
+    .filter(
+      (elem) =>
+        elem.done == false &&
+        (elem.assignee === getCurrentUser().get("username") ||
+          elem.assignee === "Unassigned"),
+    )
+    .sort(prioritizeTasks);
 
   // Filter tasks with and without dueDate after priority
-  const tasksWithDate = [...relevantTasks]
-    .filter((elem) => elem.dueDate)
-  const tasksWithoutDate = [...relevantTasks]
-    .filter((elem) => !elem.dueDate)
+  const tasksWithDate = [...relevantTasks].filter((elem) => elem.dueDate);
+  const tasksWithoutDate = [...relevantTasks].filter((elem) => !elem.dueDate);
 
   const tasksPerList = 1;
 
   const visibleTasks = [
-  ...tasksWithDate.slice(0, tasksPerList),
-  ...tasksWithoutDate.slice(0, tasksPerList),
-];
+    ...tasksWithDate.slice(0, tasksPerList),
+    ...tasksWithoutDate.slice(0, tasksPerList),
+  ];
 
   // Fetch all the to dos for the list on mount
   useEffect(() => {
@@ -72,8 +72,11 @@ export default function ToDoList({ list }) {
               No tasks are unassigned or assigned to you on this list.
             </Typography>
             <Typography>
-              There are <strong className="text-emphasized">{toDoList.filter((elem) => !elem.done).length} active
-              task(s)</strong> assigned to other people.
+              There are{" "}
+              <strong className="text-emphasized">
+                {toDoList.filter((elem) => !elem.done).length} active task(s)
+              </strong>{" "}
+              assigned to other people.
             </Typography>
           </>
         ) : (

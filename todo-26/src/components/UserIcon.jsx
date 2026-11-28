@@ -1,13 +1,22 @@
-export default function UserIcon({ user, username }) {
-  const name = username ?? user?.username;
+import { Typography } from "@mui/material";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import NoAccountsOutlinedIcon from "@mui/icons-material/NoAccountsOutlined";
+
+export default function UserIcon({ user, username, variant = "body1" }) {
+  const name = username ?? user?.get?.("username") ?? user?.username;
   const isUnassigned = !name || name === "Unassigned";
 
   return (
     <span className="layout-row">
-      <span className="material-symbols-outlined">
-        {isUnassigned ? "account_circle_off" : "account_circle"}
-      </span>
-      <span>{isUnassigned ? "Unassigned" : name}</span>
+      {isUnassigned ? (
+        <NoAccountsOutlinedIcon />
+      ) : (
+        <AccountCircleOutlinedIcon />
+      )}
+
+      <Typography variant={variant}>
+        {isUnassigned ? "Unassigned" : name}
+      </Typography>
     </span>
   );
 }

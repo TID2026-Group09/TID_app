@@ -6,8 +6,7 @@ import LandingPage from "./pages/LandingPage.jsx";
 import TaskDetailsPage from "./pages/TaskDetailsPage.jsx";
 import { useState } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import Typography from "@mui/material/Typography";
-import { Button } from "@mui/material";
+import Navbar from "./components/Navbar.jsx";
 
 function App() {
   const [user, setUser] = useState(getCurrentUser());
@@ -22,26 +21,28 @@ function App() {
     window.history.replaceState(null, "", import.meta.env.BASE_URL);
   }
 
-  if (!user) {
-    return <AuthPage onAuthenticated={handleAuthenticated} />;
-  }
-
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
-      <div className="layout-row layout-between">
-        <Typography variant="h2">
-          Logged in as: {user.get("username")}
-        </Typography>
-        <Button variant="contained" onClick={handleLogOut}>
-          Log Out
-        </Button>
-      </div>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/lists/:listId" element={<ListPage />} />
-        <Route path="/lists/:listId/:todoId" element={<TaskDetailsPage />} />
-        <Route path="*" element={<Link to="/">No such page exists.</Link>} />
-      </Routes>
+      <Navbar user={user} onLogout={handleLogOut} />
+
+      <main className="app-content">
+        {!user ? (
+          <AuthPage onAuthenticated={handleAuthenticated} />
+        ) : (
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/lists/:listId" element={<ListPage />} />
+            <Route
+              path="/lists/:listId/:todoId"
+              element={<TaskDetailsPage />}
+            />
+            <Route
+              path="*"
+              element={<Link to="/">No such page exists.</Link>}
+            />
+          </Routes>
+        )}
+      </main>
     </BrowserRouter>
   );
 }

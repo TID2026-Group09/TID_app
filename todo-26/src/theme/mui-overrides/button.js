@@ -22,10 +22,6 @@ export const buttonTheme = {
           backgroundColor: theme.palette.action.disabledLight,
           borderColor: theme.palette.action.disabledDark,
         },
-
-        "&.Mui-disabled.MuiButton-text": {
-          color: theme.palette.action.disabledDark,
-        },
       }),
 
       // Small button sizing and typography

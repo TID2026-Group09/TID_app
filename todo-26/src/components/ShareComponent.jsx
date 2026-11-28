@@ -1,8 +1,3 @@
-// import {
-//   shareList,
-//   getListMembers,
-//   removeUserFromList,
-// } from "../services/toDoService.js";
 import { Typography, Button, IconButton } from "@mui/material";
 import {
   shareList,
@@ -15,6 +10,7 @@ import UserIcon from "./UserIcon.jsx";
 import TextForm from "./TextForm.jsx";
 import WarningPopup from "./WarningPopup.jsx";
 import { getCurrentUser } from "../services/authService.js";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 export default function ShareComponent({
   list,
@@ -97,7 +93,7 @@ export default function ShareComponent({
             aria-label="Close popup"
             className="close-popup-button"
           >
-            <span className="material-symbols-outlined">close</span>
+            <CloseOutlinedIcon />
           </IconButton>
 
           <Typography variant="h2" id="popup-title">

@@ -1,5 +1,6 @@
 import { Typography, IconButton, Button } from "@mui/material";
 import { useEffect } from "react";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 export default function WarningPopup({ message, onConfirm, onClose }) {
   // Close on Escape
@@ -34,7 +35,7 @@ export default function WarningPopup({ message, onConfirm, onClose }) {
           aria-label="Close popup"
           className="close-popup-button"
         >
-          <span className="material-symbols-outlined">close</span>
+          <CloseOutlinedIcon />
         </IconButton>
 
         <Typography variant="h2" id="warning-title">
